@@ -1,6 +1,8 @@
 package com.wp.lambda.cart;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
  * @Created by wangpeng116
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Sku {
     //编号
     private Integer skuId;
