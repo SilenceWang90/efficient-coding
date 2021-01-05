@@ -24,4 +24,13 @@ public class CartService {
             , new Sku(697894, "算法", BigDecimal.valueOf(78.20), 1, BigDecimal.valueOf(78.20), SkuCategoryEnum.BOOKS)
             , new Sku(696968, "TensorFlow进阶指南", BigDecimal.valueOf(85.10), 1, BigDecimal.valueOf(85.10), SkuCategoryEnum.BOOKS)
     );
+
+    /**
+     * 商品列表信息
+     *
+     * @return
+     */
+    public static List<Sku> getCartSkuList() {
+        return cartSkuList;
+    }
 }
