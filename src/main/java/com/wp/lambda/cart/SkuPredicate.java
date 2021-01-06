@@ -2,7 +2,7 @@ package com.wp.lambda.cart;
 
 /**
  * @Classname SkuPredicate
- * @Description Sku选择谓词接口
+ * @Description Sku选择谓词接口（策略模式基础接口）
  * @Date 2021/1/5 15:16
  * @Created by wangpeng116
  */

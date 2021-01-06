@@ -17,11 +17,13 @@ import java.util.List;
 @Slf4j
 public class Test {
 
+    @org.junit.Test
     public void filterSkus() {
         List<Sku> cartSkuList = CartService.getCartSkuList();
+
         SkuPredicate skuPredicate = new SkuBooksCategoryPredicate();
         List<Sku> result = CartService.filterSku(cartSkuList, skuPredicate);
-
+        log.info("结果为：{}", result);
     }
 
 }
