@@ -33,4 +33,22 @@ public class CartService {
     public static List<Sku> getCartSkuList() {
         return cartSkuList;
     }
+
+    /**
+     * 根据不同的Sku判断标准，对Sku列表进行过滤
+     *
+     * @param cartSkuList
+     * @param skuPredicate 不同的Sku判断标准逻辑
+     * @return
+     */
+    public static List<Sku> filterSku(List<Sku> cartSkuList, SkuPredicate skuPredicate) {
+        List<Sku> result = Lists.newArrayList();
+        for (Sku sku : cartSkuList) {
+            //根据不同sku判断标准策略进行判断
+            if (skuPredicate.test(sku)) {
+                result.add(sku);
+            }
+        }
+        return result;
+    }
 }
