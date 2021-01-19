@@ -1,5 +1,11 @@
 package com.wp.guava;
 
+
+import com.google.common.collect.ImmutableList;
+import com.wp.lambda.cart.CartService;
+import com.wp.lambda.cart.Sku;
+
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -45,5 +51,13 @@ public class OptionalTest {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+
+        collectionOperate();
+    }
+
+    private static void collectionOperate() {
+        List<Sku> list = ImmutableList.copyOf(CartService.getCartSkuList());
+        list.forEach(obj -> obj.setSkuName(""));
+        System.out.println(list);
     }
 }
