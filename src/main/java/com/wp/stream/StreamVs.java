@@ -3,7 +3,10 @@ package com.wp.stream;
 import com.wp.lambda.cart.CartService;
 import com.wp.lambda.cart.Sku;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,5 +31,8 @@ public class StreamVs {
     public static void newCartHandle() {
         //1、尽量少用peek，用map处理即可
         List<Sku> result = CartService.getCartSkuList().stream().peek(sku -> System.out.println(sku)).collect(Collectors.toList());
+        Map<Integer, List<Sku>> response = Optional.ofNullable(result).orElseGet(ArrayList::new)
+                .stream().collect(Collectors.groupingBy(Sku::getSkuId));
+        System.out.println(response);
     }
 }
