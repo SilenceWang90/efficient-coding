@@ -2,6 +2,7 @@ package com.wp.guava;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.List;
@@ -39,5 +40,11 @@ public class SetsTest {
         // 笛卡尔积
         Set<List<Integer>> set7 = Sets.cartesianProduct(set1,set2);
         System.out.println(set7);
+
+        // 集合拆解
+        List<Integer> list = Lists.newArrayList(1,2,3,4,5,6,7);
+        // 3个3个一组
+        List<List<Integer>> collection = Lists.partition(list,3);
+        System.out.println("集合拆解："+collection);
     }
 }
