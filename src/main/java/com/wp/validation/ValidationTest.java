@@ -36,7 +36,7 @@ public class ValidationTest {
         friend.setAge(71);
         userInfo.setFriends(Lists.newArrayList(friend));
         //3、验证对象
-        set = validator.validate(userInfo);
+        set = validator.validate(userInfo, UserInfo.Group.class);
         //4、输出验证结果
         set.forEach(item -> {
             System.out.println(item.getMessage());
