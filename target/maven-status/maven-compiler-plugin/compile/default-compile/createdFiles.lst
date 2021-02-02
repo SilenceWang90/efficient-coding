@@ -1,0 +1,15 @@
+com\wp\stream\StreamOperator.class
+com\wp\lambda\cart\SkuCategoryEnum.class
+com\wp\resource\FileCopyTest.class
+com\wp\EfficientCodingApplication.class
+com\wp\lambda\cart\SkuBooksCategoryPredicate.class
+com\wp\stream\StreamVs.class
+com\wp\resource\NewFileCopyTest.class
+com\wp\stream\ReduceAndCollect.class
+com\wp\lambda\file\FileConsumer.class
+com\wp\lambda\file\FileService.class
+com\wp\lambda\cart\Sku.class
+com\wp\stream\ReduceAndCollect$1Order.class
+com\wp\lambda\cart\SkuTotalPricePredicate.class
+com\wp\lambda\cart\CartService.class
+com\wp\lambda\cart\SkuPredicate.class
