@@ -69,6 +69,16 @@
             <artifactId>javax.el</artifactId>
             <version>2.2.6</version>
         </dependency>
+        <!-- Caffeine缓存 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.2.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
