@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/testCache")
 public class TestCache {
     @PostMapping("/test1")
-    @Cacheable(cacheNames = "users-cache",key = "#user.userId")
+    @Cacheable(cacheNames = "users-cache", key = "#user.userId", condition = "#user.userName=='wangpeng'")
     public String test1(@RequestBody UserInfo user) {
         System.out.println("未使用缓存");
         return "wp";
