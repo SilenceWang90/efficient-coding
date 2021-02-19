@@ -1,5 +1,6 @@
 package com.wp.service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
 
@@ -19,9 +20,17 @@ public interface FileService {
     void upload(InputStream inputStream, String filename);
 
     /**
-     * 文化上传
+     * 文件上传
      *
      * @param file
      */
     void upload(File file);
+
+    /**
+     * 文件下载
+     *
+     * @param fileId
+     * @param response
+     */
+    void download(String fileId, HttpServletResponse response);
 }

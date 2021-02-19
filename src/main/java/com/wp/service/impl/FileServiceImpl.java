@@ -4,10 +4,9 @@ import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Classname FileServiceImpl
@@ -57,5 +56,34 @@ public class FileServiceImpl implements FileService {
         } catch (Exception e) {
             log.error("文件上传异常，文件名称：{}，异常信息：{}", file.getName(), e);
         }
+    }
+
+    @Override
+    public void download(String fileId, HttpServletResponse response) {
+        //文件路径，一般是通过文件id获取，实际要根据实际的业务规则
+        String filePath = "F:/审批通过数据.xlsx";
+        File file = new File(filePath);
+        try (
+                OutputStream outputStream = response.getOutputStream();
+                InputStream inputStream = new FileInputStream(file)
+        ) {
+            //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
+            String filename = new String(file.getName().getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            response.setHeader("content-disposition", "attachment;filename=" + filename);
+//            response.setContentType("application/octet-stream;charset=UTF-8");
+            // 缓冲区
+            byte[] buffer = new byte[1024];
+            // 读取文件流长度
+            int len;
+            // 读取到的文件内容没有结束，则写入输出流中
+            while ((len = inputStream.read(buffer)) > 0) {
+                // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
+                // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
+                outputStream.write(buffer, 0, len);
+            }
+        } catch (Exception e) {
+            log.error("文件下载失败，文件路径：{}，异常信息：{}", filePath, e);
+        }
+
     }
 }
