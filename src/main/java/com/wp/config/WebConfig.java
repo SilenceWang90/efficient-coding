@@ -44,6 +44,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
+        // 配置本地文件夹目录映射
+        /*registry
+                // 拦截请求的路径
+                .addResourceHandler("/uploads/**")
+                // 资源所在地址(windows应该要以file:/开头)
+                .addResourceLocations("file:/C:/Users/wangpeng116/Desktop");*/
     }
 }
