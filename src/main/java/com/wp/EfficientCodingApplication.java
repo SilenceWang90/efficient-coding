@@ -2,6 +2,7 @@ package com.wp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 
 /**
  * @Classname EfficientCoding
@@ -10,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Created by wangpeng116
  */
 @SpringBootApplication
+//扫秒自定义的filter
+@ServletComponentScan
 public class EfficientCodingApplication {
     public static void main(String[] args) {
         SpringApplication.run(EfficientCodingApplication.class, args);
