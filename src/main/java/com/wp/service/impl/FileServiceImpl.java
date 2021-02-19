@@ -1,5 +1,10 @@
 package com.wp.service.impl;
 
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.google.common.collect.Lists;
+import com.wp.dto.UserExportDto;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,6 +12,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Classname FileServiceImpl
@@ -84,6 +91,50 @@ public class FileServiceImpl implements FileService {
         } catch (Exception e) {
             log.error("文件下载失败，文件路径：{}，异常信息：{}", filePath, e);
         }
+    }
 
+    @Override
+    public void exportExcel(HttpServletResponse response) {
+        try (
+                OutputStream outputStream = response.getOutputStream()
+        ) {
+            String filename = new String("excel导出的文件.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            response.setHeader("content-disposition", "attachment;filename=" + filename);
+            // 1、创建EasyExcel导出对象，注明输出流以及对应的导出实体类型，在导出实体类型中增加easyexcel的注解功能(指明列以及样式等等)
+            ExcelWriter excelWriter = EasyExcelFactory.write(outputStream, UserExportDto.class).build();
+            // 2、分批加载数据：即分页查询出要导出的数据，通过循环修改分页查询参数然后查询出不同页码的数据
+            // 示例为了方便手动造2条数据用于演示
+            List<UserExportDto> list1 = Lists.newArrayList();
+            List<UserExportDto> list2 = Lists.newArrayList();
+            UserExportDto userExportDto1 = new UserExportDto();
+            userExportDto1.setUserId(12L);
+            userExportDto1.setUserName("wangpeng");
+            userExportDto1.setAge(18);
+            userExportDto1.setCreateTime(LocalDateTime.now());
+
+            UserExportDto userExportDto2 = new UserExportDto();
+            userExportDto2.setUserId(16L);
+            userExportDto2.setUserName("yumanlu");
+            userExportDto2.setAge(18);
+            userExportDto2.setCreateTime(LocalDateTime.now());
+
+            list1.add(userExportDto1);
+            list2.add(userExportDto2);
+            // 数据导出到哪个sheet页中，参数1是sheet页码，参数2是给sheet页起名
+            WriteSheet writeSheet = EasyExcelFactory.writerSheet(1, "数据").build();
+            // 3、导出分批加载的数据（实际业务场景就是分页查询的结果进行处理，这里用while循环来替代演示）
+            for (int i = 0; i < 2; i++) {
+                if (i == 1) {
+                    excelWriter.write(list1, writeSheet);
+                } else {
+                    excelWriter.write(list2, writeSheet);
+                }
+            }
+            // 关闭excelWriter
+            excelWriter.finish();
+            log.info("完成导出");
+        } catch (Exception e) {
+            log.error("文件导出失败，导出异常信息：{}", e);
+        }
     }
 }

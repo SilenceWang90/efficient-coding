@@ -33,4 +33,6 @@ public interface FileService {
      * @param response
      */
     void download(String fileId, HttpServletResponse response);
+
+    void exportExcel(HttpServletResponse response);
 }

@@ -55,4 +55,16 @@ public class FileController {
         fileService.download(fileId, response);
         return "文件下载成功";
     }
+
+    /**
+     * 文件导出(excel)
+     *
+     * @param response
+     * @return
+     */
+    @GetMapping("/exportExcel")
+    public String exportExcel(HttpServletResponse response) {
+        fileService.exportExcel(response);
+        return "导出成功";
+    }
 }
