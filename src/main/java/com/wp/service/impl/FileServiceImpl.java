@@ -4,7 +4,9 @@ import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.wp.dto.UserExportDto;
+import com.wp.dto.UserFillData;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Classname FileServiceImpl
@@ -135,6 +138,58 @@ public class FileServiceImpl implements FileService {
             log.info("完成导出");
         } catch (Exception e) {
             log.error("文件导出失败，导出异常信息：{}", e);
+        }
+    }
+
+    /**
+     * Excel导出到固定模板
+     *
+     * @param response
+     */
+    @Override
+    public void exportExcelWithTemplate(HttpServletResponse response) {
+
+    }
+
+    /**
+     * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
+     *
+     * @param response
+     */
+    @Override
+    public void exportWithFillDataInTemplate(HttpServletResponse response) throws UnsupportedEncodingException {
+        // 1、获取模板
+        String templateFilePath = "C:/Users/wangpeng116/Desktop/导出模板.xlsx";
+        String filename = new String("导出模板.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        response.setHeader("content-disposition", "attachment;filename=" + filename);
+        // 2、查询数据
+        List<UserFillData> list = Lists.newArrayList();
+        UserFillData userExportDto1 = new UserFillData();
+        userExportDto1.setUserId(12L);
+        userExportDto1.setUserName("wangpeng");
+        UserFillData userExportDto2 = new UserFillData();
+        userExportDto2.setUserId(16L);
+        userExportDto2.setUserName("yumanlu");
+        list.add(userExportDto1);
+        list.add(userExportDto2);
+        // 3、创建EasyExcel对象
+        try (
+                OutputStream outputStream = response.getOutputStream()
+        ) {
+            ExcelWriter excelWriter = EasyExcelFactory.write(outputStream).withTemplate(templateFilePath).build();
+            // 写到哪个sheet页上，切记sheetNo是从0开始而不是从1开始
+            WriteSheet writeSheet = EasyExcelFactory.writerSheet(0,"数据1").build();
+            excelWriter.fill(list, writeSheet);
+            // map也可以，当前测试多个sheet页同时填充数据
+            Map<String, String> map = Maps.newHashMap();
+            map.put("testInfo", "211314");
+            WriteSheet writeSheet2 = EasyExcelFactory.writerSheet(1,"数据2").build();
+            excelWriter.fill(map, writeSheet2);
+            //关闭
+            excelWriter.finish();
+            log.info("完成导出");
+        } catch (Exception e) {
+            log.error("异常信息：{}", e);
         }
     }
 }

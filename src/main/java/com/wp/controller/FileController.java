@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @Classname FileController
@@ -67,4 +68,16 @@ public class FileController {
         fileService.exportExcel(response);
         return "导出成功";
     }
+
+    /**
+     * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
+     *
+     * @param response
+     */
+    @GetMapping("/exportWithFillDataInTemplate")
+    public String exportWithFillDataInTemplate(HttpServletResponse response) throws UnsupportedEncodingException {
+        fileService.exportWithFillDataInTemplate(response);
+        return "导出成功";
+    }
 }
+
