@@ -1,16 +1,24 @@
 package com.wp.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wp.config.EasyExcelListener;
+import com.wp.dto.ReadExcelDto;
 import com.wp.dto.UserExportDto;
 import com.wp.dto.UserFillData;
+import com.wp.mapper.SaveMapper;
+import com.wp.service.BusinessService;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +35,10 @@ import java.util.Map;
 @Service
 @Slf4j
 public class FileServiceImpl implements FileService {
+    @Resource
+    private SaveMapper saveMapper;
+    @Resource
+    private BusinessService businessService;
 
     /**
      * 存储空间
@@ -169,12 +181,12 @@ public class FileServiceImpl implements FileService {
         ) {
             ExcelWriter excelWriter = EasyExcelFactory.write(outputStream).withTemplate(templateFilePath).build();
             // 写到哪个sheet页上，切记sheetNo是从0开始而不是从1开始
-            WriteSheet writeSheet = EasyExcelFactory.writerSheet(0,"数据1").build();
+            WriteSheet writeSheet = EasyExcelFactory.writerSheet(0, "数据1").build();
             excelWriter.fill(list, writeSheet);
             // map也可以，当前测试多个sheet页同时填充数据
             Map<String, String> map = Maps.newHashMap();
             map.put("testInfo", "211314");
-            WriteSheet writeSheet2 = EasyExcelFactory.writerSheet(1,"数据2").build();
+            WriteSheet writeSheet2 = EasyExcelFactory.writerSheet(1, "数据2").build();
             excelWriter.fill(map, writeSheet2);
             //关闭
             excelWriter.finish();
@@ -182,5 +194,21 @@ public class FileServiceImpl implements FileService {
         } catch (Exception e) {
             log.error("异常信息：{}", e);
         }
+    }
+
+    /**
+     * EasyExcel读取Excel
+     *
+     * @param inputStream
+     */
+    @Override
+    public void readEasyExcel(InputStream inputStream) {
+        // EasyExcelListener构造函数导入Spring的对象
+        ExcelReader excelReader = EasyExcel.read(inputStream, ReadExcelDto.class, new EasyExcelListener(businessService, saveMapper)).build();
+        // 读取哪个sheet
+        ReadSheet readSheet = EasyExcel.readSheet(0).build();
+        excelReader.read(readSheet);
+        // 关闭流
+        excelReader.finish();
     }
 }

@@ -37,13 +37,22 @@ public interface FileService {
 
     /**
      * Excel导出
+     *
      * @param response
      */
     void exportExcel(HttpServletResponse response);
 
     /**
      * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
+     *
      * @param response
      */
     void exportWithFillDataInTemplate(HttpServletResponse response) throws UnsupportedEncodingException;
+
+    /**
+     * EasyExcel读取Excel
+     *
+     * @param inputStream
+     */
+    void readEasyExcel(InputStream inputStream);
 }

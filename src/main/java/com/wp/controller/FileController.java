@@ -79,5 +79,17 @@ public class FileController {
         fileService.exportWithFillDataInTemplate(response);
         return "导出成功";
     }
+
+    /**
+     * EasyExcel读取文档
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/readEasyExcel")
+    public String readEasyExcel(@NotNull MultipartFile file) throws IOException {
+        fileService.readEasyExcel(file.getInputStream());
+        return "读取成功";
+    }
 }
 
