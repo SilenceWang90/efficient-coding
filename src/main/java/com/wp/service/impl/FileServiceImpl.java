@@ -166,6 +166,7 @@ public class FileServiceImpl implements FileService {
         String templateFilePath = "C:/Users/wangpeng116/Desktop/导出模板.xlsx";
         String filename = new String("导出模板.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
         response.setHeader("content-disposition", "attachment;filename=" + filename);
+        response.setCharacterEncoding("UTF-8");
         // 2、查询数据
         List<UserFillData> list = Lists.newArrayList();
         UserFillData userExportDto1 = new UserFillData();
@@ -224,6 +225,28 @@ public class FileServiceImpl implements FileService {
     @Async("exportServiceExecutor")
     @Override
     public void asyncExport(HttpServletResponse response) {
-        exportExcel(response);
+        try {
+            String filename = new String("excel导出的文件.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            response.setHeader("content-disposition", "attachment;filename=" + filename);
+
+            List<UserExportDto> list = Lists.newArrayList();
+            UserExportDto userExportDto1 = new UserExportDto();
+            userExportDto1.setUserId(12L);
+            userExportDto1.setUserName("wangpeng");
+            userExportDto1.setAge(18);
+            userExportDto1.setCreateTime(LocalDateTime.now());
+            list.add(userExportDto1);
+            UserExportDto userExportDto2 = new UserExportDto();
+            userExportDto2.setUserId(16L);
+            userExportDto2.setUserName("yumanlu");
+            userExportDto2.setAge(18);
+            userExportDto2.setCreateTime(LocalDateTime.now());
+            list.add(userExportDto2);
+
+            EasyExcel.write(response.getOutputStream(), UserExportDto.class).sheet(0).doWrite(list);
+            log.info("完成导出");
+        } catch (Exception e) {
+            log.error("文件导出失败，导出异常信息：{}", e);
+        }
     }
 }
