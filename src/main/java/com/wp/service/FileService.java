@@ -55,4 +55,11 @@ public interface FileService {
      * @param inputStream
      */
     void readEasyExcel(InputStream inputStream);
+
+    /**
+     * 异步导出
+     *
+     * @param response
+     */
+    void asyncExport(HttpServletResponse response);
 }

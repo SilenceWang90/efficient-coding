@@ -70,6 +70,18 @@ public class FileController {
     }
 
     /**
+     * 文件异步导出
+     *
+     * @param response
+     * @return
+     */
+    @GetMapping("/asyncExportExcel")
+    public String asyncExportExcel(HttpServletResponse response) {
+        fileService.asyncExport(response);
+        return "导出成功";
+    }
+
+    /**
      * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
      *
      * @param response

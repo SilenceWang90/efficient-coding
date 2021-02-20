@@ -16,6 +16,7 @@ import com.wp.mapper.SaveMapper;
 import com.wp.service.BusinessService;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -110,9 +111,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void exportExcel(HttpServletResponse response) {
-        try (
-                OutputStream outputStream = response.getOutputStream()
-        ) {
+        try {
+            OutputStream outputStream = response.getOutputStream();
             String filename = new String("excel导出的文件.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
             response.setHeader("content-disposition", "attachment;filename=" + filename);
             // 1、创建EasyExcel导出对象，注明输出流以及对应的导出实体类型，在导出实体类型中增加easyexcel的注解功能(指明列以及样式等等)
@@ -213,5 +213,16 @@ public class FileServiceImpl implements FileService {
         excelReader.read(readSheet, readSheet2);*/
         // 关闭流
         excelReader.finish();
+    }
+
+    /**
+     * 异步导出
+     *
+     * @param response
+     */
+    @Async("exportServiceExecutor")
+    @Override
+    public void asyncExport(HttpServletResponse response) {
+        exportExcel(response);
     }
 }
