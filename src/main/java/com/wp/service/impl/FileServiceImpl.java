@@ -208,6 +208,9 @@ public class FileServiceImpl implements FileService {
         // 读取哪个sheet
         ReadSheet readSheet = EasyExcel.readSheet(0).build();
         excelReader.read(readSheet);
+        // 读取多个sheet
+        /*ReadSheet readSheet2 = EasyExcel.readSheet(1).build();
+        excelReader.read(readSheet, readSheet2);*/
         // 关闭流
         excelReader.finish();
     }
