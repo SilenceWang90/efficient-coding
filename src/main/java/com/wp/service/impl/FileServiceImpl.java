@@ -124,7 +124,7 @@ public class FileServiceImpl implements FileService {
             list1.add(userExportDto1);
             list2.add(userExportDto2);
             // 数据导出到哪个sheet页中，参数1是sheet页码，参数2是给sheet页起名
-            WriteSheet writeSheet = EasyExcelFactory.writerSheet(1, "数据").build();
+            WriteSheet writeSheet = EasyExcelFactory.writerSheet(0, "数据").build();
             // 3、导出分批加载的数据（实际业务场景就是分页查询的结果进行处理，这里用while循环来替代演示）
             for (int i = 0; i < 2; i++) {
                 if (i == 1) {
@@ -140,7 +140,7 @@ public class FileServiceImpl implements FileService {
             log.error("文件导出失败，导出异常信息：{}", e);
         }
     }
-    
+
 
     /**
      * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
