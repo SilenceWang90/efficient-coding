@@ -140,16 +140,7 @@ public class FileServiceImpl implements FileService {
             log.error("文件导出失败，导出异常信息：{}", e);
         }
     }
-
-    /**
-     * Excel导出到固定模板
-     *
-     * @param response
-     */
-    @Override
-    public void exportExcelWithTemplate(HttpServletResponse response) {
-
-    }
+    
 
     /**
      * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
