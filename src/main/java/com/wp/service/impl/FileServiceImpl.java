@@ -222,7 +222,7 @@ public class FileServiceImpl implements FileService {
      *
      * @param response
      */
-    @Async("exportServiceExecutor")
+    @Async(value = "exportServiceExecutor")
     @Override
     public void asyncExport(HttpServletResponse response) {
         try {
@@ -242,8 +242,8 @@ public class FileServiceImpl implements FileService {
             userExportDto2.setAge(18);
             userExportDto2.setCreateTime(LocalDateTime.now());
             list.add(userExportDto2);
-
-            EasyExcel.write(response.getOutputStream(), UserExportDto.class).sheet(0).doWrite(list);
+            // 异步导出只能这么写，因为异步时主线程已关闭response.getOutputStream()，子线程无法关闭输出流就会报错
+            EasyExcel.write("文件路径", UserExportDto.class).sheet(0).doWrite(list);
             log.info("完成导出");
         } catch (Exception e) {
             log.error("文件导出失败，导出异常信息：{}", e);
