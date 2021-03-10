@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -111,6 +108,41 @@ public class FileController {
     public void exportExcel(HttpServletResponse response) {
         fileService.exportExcel(response);
     }
+
+    @GetMapping("/exportExcelByte")
+    public byte[] exportExcel() throws IOException {
+        //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
+        String filename = new String("byte数组的Excel文件".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filePath = "F:/审批通过数据.xlsx";
+        File file = new File(filePath);
+        InputStream inputStream = new FileInputStream(file);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int n = 0;
+        while (-1 != (n = inputStream.read(buffer))) {
+            output.write(buffer, 0, n);
+        }
+        return output.toByteArray();
+    }
+
+
+    /**
+     * 从其他接口获取文件信息
+     */
+    @GetMapping("/getFileInfoByte")
+    public void getFileInfoByte(HttpServletResponse response) throws IOException {
+        ResponseEntity<byte[]> entity = restTemplate.getForEntity("http://localhost:8080/api/files/exportExcelByte", byte[].class);
+        // 别人的输出就是我的输入
+        byte[] bytes = entity.getBody();
+        //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
+        String filename = new String("我是导出的excelByte.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        response.setHeader("content-disposition", "attachment;filename=" + filename);
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(bytes);
+        System.out.println("下载成功");
+    }
+
 
     /**
      * 从其他接口获取文件信息
