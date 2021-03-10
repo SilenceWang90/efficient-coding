@@ -90,6 +90,10 @@
 <!--            <artifactId>asm-all</artifactId>-->
 <!--            <version>5.0_BETA</version>-->
 <!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
