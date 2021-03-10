@@ -97,18 +97,6 @@ public class FileController {
         return "读取成功";
     }
 
-
-    /**
-     * 文件导出(excel)
-     *
-     * @param response
-     * @return
-     */
-    @GetMapping("/exportExcel")
-    public void exportExcel(HttpServletResponse response) {
-        fileService.exportExcel(response);
-    }
-
     @GetMapping("/exportExcelByte")
     public byte[] exportExcel() throws IOException {
         //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
@@ -141,6 +129,18 @@ public class FileController {
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(bytes);
         System.out.println("下载成功");
+    }
+
+
+    /**
+     * 文件导出(excel)
+     *
+     * @param response
+     * @return
+     */
+    @GetMapping("/exportExcel")
+    public void exportExcel(HttpServletResponse response) {
+        fileService.exportExcel(response);
     }
 
 
