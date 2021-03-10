@@ -118,6 +118,7 @@ public class FileController {
     @GetMapping("/getFileInfo")
     public void getFileInfo(HttpServletResponse response) throws IOException {
         ResponseEntity<Resource> entity = restTemplate.getForEntity("http://localhost:8080/api/files/exportExcel", Resource.class);
+        // 别人的输出就是我的输入
         InputStream inputStream = entity.getBody().getInputStream();
         OutputStream outputStream = response.getOutputStream();
         //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
