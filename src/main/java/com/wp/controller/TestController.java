@@ -75,6 +75,7 @@ public class TestController {
         System.out.println(fib(3));
         System.out.println(fib(4));
         System.out.println(fib(5));
+        System.out.println();
     }
 
     public int fib(int n) {
