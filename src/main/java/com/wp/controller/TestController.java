@@ -50,8 +50,41 @@ public class TestController {
             current = current.getLinkObjectDto();
         }
         System.out.println(result);
+        System.out.println("===============================");
+        String calcResult = this.getResult(head);
+        System.out.println("递归结果：" + calcResult);
         return head;
     }
 
+    public String getResult(LinkObjectDto linkObjectDto) {
+        // 1、结束条件：子逻辑不存在
+        if (linkObjectDto == null) {
+            return "";
+        }
+        // 2、逻辑处理
+        String result = linkObjectDto.getValue();
+        // 3、递归公式
+        result = result + getResult(linkObjectDto.getLinkObjectDto());
+        return result;
+    }
+
+    @GetMapping("/test2")
+    public void test2(){
+        System.out.println(fib(1));
+        System.out.println(fib(2));
+        System.out.println(fib(3));
+        System.out.println(fib(4));
+        System.out.println(fib(5));
+    }
+
+    public int fib(int n) {
+        if (n == 1) {
+            return 1;
+        } else if (n == 2) {
+            return 1;
+        } else {
+            return fib(n - 1) + fib(n - 2);
+        }
+    }
 
 }
