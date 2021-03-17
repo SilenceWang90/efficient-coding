@@ -63,7 +63,7 @@ public class TestController {
         }
         // 2、逻辑处理
         String result = linkObjectDto.getValue();
-        // 3、递归公式
+        // 3、递归公式(当前方法如何使用递归的结果)：当前结果+递归结果
         result = result + getResult(linkObjectDto.getLinkObjectDto());
         return result;
     }
@@ -75,7 +75,6 @@ public class TestController {
         System.out.println(fib(3));
         System.out.println(fib(4));
         System.out.println(fib(5));
-        System.out.println();
     }
 
     public int fib(int n) {
