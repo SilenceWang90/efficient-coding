@@ -1,6 +1,7 @@
 package com.wp.controller;
 
 import com.wp.dto.LinkObjectDto;
+import com.wp.service.RetryableService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,8 @@ import javax.annotation.Resource;
 public class TestController {
     @Resource
     private RestTemplate restTemplate;
+    @Resource
+    private RetryableService retryableService;
 
     @GetMapping("/getLinkObjectDtoInfo")
     public LinkObjectDto getLinkObjectDtoInfo() {
@@ -85,6 +88,12 @@ public class TestController {
         } else {
             return fib(n - 1) + fib(n - 2);
         }
+    }
+
+    @GetMapping("/testRetry")
+    public String testRetry(){
+        String result = retryableService.testRetry("成功");
+        return result;
     }
 
 }
