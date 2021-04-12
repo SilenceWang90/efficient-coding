@@ -32,7 +32,23 @@ public class RetryableServiceImpl implements RetryableService {
 
     @Recover
     public String testRetryRecovery(ArithmeticException e) {
-        log.error("发生异常：", e);
+        log.error("发生异常，异常：", e);
         return "recover";
+    }
+
+    @Retryable(backoff = @Backoff(delay = 1000L))
+    @Override
+    public void testRecover(String text) throws ArithmeticException {
+        log.info("我被调用：{}", LocalTime.now());
+        try {
+            int n = 1 / 0;
+        } catch (ArithmeticException e) {
+            throw new ArithmeticException();
+        }
+    }
+
+    @Recover
+    public void retryRecovery(ArithmeticException e) {
+        log.error("发生异常：", e);
     }
 }

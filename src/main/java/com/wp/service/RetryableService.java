@@ -13,4 +13,10 @@ public interface RetryableService {
      * @return
      */
     String testRetry(String text);
+
+    /**
+     * 重试失败回调
+     * @param text
+     */
+    void testRecover(String text);
 }

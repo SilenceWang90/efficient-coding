@@ -10,6 +10,6 @@ import org.springframework.retry.annotation.EnableRetry;
  * @Created by wangpeng116
  */
 @Configuration
-@EnableRetry
+@EnableRetry(proxyTargetClass = true)
 public class RetryableConfiguration {
 }

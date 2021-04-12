@@ -96,4 +96,10 @@ public class TestController {
         return result;
     }
 
+    @GetMapping("/testRetryRecover")
+    public String testRetryRecover(){
+        retryableService.testRecover("成功");
+        return "成功";
+    }
+
 }
