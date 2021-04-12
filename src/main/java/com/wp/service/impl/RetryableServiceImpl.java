@@ -18,8 +18,7 @@ import java.time.LocalTime;
 @Service
 @Slf4j
 public class RetryableServiceImpl implements RetryableService {
-    @Retryable(maxAttempts = 3, value = {ArithmeticException.class}, exclude = {NullPointerException.class},
-            backoff = @Backoff(delay = 2000L, multiplier = 2))
+    @Retryable(maxAttempts = 3, value = {ArithmeticException.class}, backoff = @Backoff(delay = 2000L, multiplier = 2))
     @Override
     public String testRetry(String text) {
         log.info("我被调用：{}", LocalTime.now());
