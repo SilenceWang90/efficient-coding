@@ -22,9 +22,6 @@ public class RetryableServiceImpl implements RetryableService {
     @Override
     public String testRetry(String text) {
         log.info("我被调用：{}", LocalTime.now());
-        // 空指针
-        /*UserFillData userFillData = new UserFillData();
-        userFillData.getUserId().toString();*/
         // 计算异常
         int n = 1 / 0;
         return "重试成功了么：" + text;
@@ -36,19 +33,16 @@ public class RetryableServiceImpl implements RetryableService {
         return "recover";
     }
 
+
     @Retryable(backoff = @Backoff(delay = 1000L))
     @Override
-    public void testRecover(String text) throws ArithmeticException {
+    public String testRecover(String text) {
         log.info("我被调用：{}", LocalTime.now());
         try {
             int n = 1 / 0;
         } catch (ArithmeticException e) {
             throw new ArithmeticException();
         }
-    }
-
-    @Recover
-    public void retryRecovery(ArithmeticException e) {
-        log.error("发生异常：", e);
+        return "重试成功";
     }
 }

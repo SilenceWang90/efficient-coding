@@ -18,5 +18,5 @@ public interface RetryableService {
      * 重试失败回调
      * @param text
      */
-    void testRecover(String text);
+    String testRecover(String text);
 }
