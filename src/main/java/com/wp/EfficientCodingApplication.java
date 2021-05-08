@@ -17,7 +17,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 @Slf4j
 public class EfficientCodingApplication {
     public static void main(String[] args) {
-        log.info("第一次");
         SpringApplication.run(EfficientCodingApplication.class, args);
     }
 }
