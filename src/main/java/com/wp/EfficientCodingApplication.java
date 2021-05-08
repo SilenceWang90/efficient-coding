@@ -1,5 +1,6 @@
 package com.wp;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -13,8 +14,10 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 @SpringBootApplication
 //扫秒自定义的filter
 @ServletComponentScan
+@Slf4j
 public class EfficientCodingApplication {
     public static void main(String[] args) {
+        log.info("第一次");
         SpringApplication.run(EfficientCodingApplication.class, args);
     }
 }
