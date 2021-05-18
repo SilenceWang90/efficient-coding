@@ -3,6 +3,7 @@ package com.wp.config.customhttpmessageconverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -22,8 +23,13 @@ import java.util.List;
  * @Created by wangpeng116
  */
 @Configuration
+@Slf4j
 public class CustomHttpMessageConverterConfigure extends WebMvcConfigurationSupport {
-    @Override
+    /**
+     * 重写此方法则会覆盖默认的消息转换器
+     * @param converters
+     */
+    /*@Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new ByteArrayHttpMessageConverter());
         converters.add(new ResourceHttpMessageConverter());
@@ -33,7 +39,27 @@ public class CustomHttpMessageConverterConfigure extends WebMvcConfigurationSupp
         converters.add(new CustomHttpMessageConverter());
         // 2、重写MappingJackson2HttpMessageConverter中ObjectMapper序列化的内容
 //        converters.add(jackson2HttpMessageConverter());
+    }*/
+
+    /**
+     * 重写此方法不会覆盖默认的消息转换器，可以追加或修改
+     *
+     * @param converters
+     */
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (int i = 0; i < converters.size(); i++) {
+            HttpMessageConverter converter = converters.get(i);
+            // 替换MappingJackson2HttpMessageConverter
+            if (converter.getClass().equals(MappingJackson2HttpMessageConverter.class)) {
+                converters.remove(i);
+                converters.add(new CustomHttpMessageConverter());
+                break;
+            }
+        }
+        log.info("已有的消息转换器{}", converters);
     }
+
 
     /**
      * 1、序列化时间戳解决Long类型精度丢失的问题
