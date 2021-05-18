@@ -2,6 +2,8 @@ package com.wp.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Classname UserFillData
  * @Description 填充数据对象
@@ -12,4 +14,5 @@ import lombok.Data;
 public class UserFillData {
     private Long userId;
     private String userName;
+    private Date createDate;
 }

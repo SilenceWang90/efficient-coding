@@ -104,6 +104,10 @@
             <artifactId>spring-aspects</artifactId>
             <version>4.1.5.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

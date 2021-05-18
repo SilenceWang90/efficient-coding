@@ -1,13 +1,16 @@
 package com.wp.controller;
 
 import com.wp.dto.LinkObjectDto;
+import com.wp.dto.UserFillData;
 import com.wp.service.RetryableService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @Classname TestController
@@ -100,6 +103,15 @@ public class TestController {
     public String testRetryRecover(){
         retryableService.testRecover("成功");
         return "成功";
+    }
+
+    @GetMapping("/getUserFillData")
+    public UserFillData getUserFillData(@RequestBody UserFillData userFillData){
+        UserFillData userFillData1 = new UserFillData();
+        userFillData1.setUserId(21321424L);
+        userFillData1.setUserName("wangpeng");
+        userFillData1.setCreateDate(new Date());
+        return userFillData1;
     }
 
 }
