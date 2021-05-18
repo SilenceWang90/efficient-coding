@@ -21,6 +21,15 @@ import java.lang.reflect.Type;
 @Slf4j
 public class CustomHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
+    /**
+     * 读取输入信息
+     * @param type content_type
+     * @param contextClass 目标对象
+     * @param inputMessage 输入流
+     * @return
+     * @throws IOException
+     * @throws HttpMessageNotReadableException
+     */
     @Override
     public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
@@ -34,5 +43,7 @@ public class CustomHttpMessageConverter extends MappingJackson2HttpMessageConver
         log.info("CustomHttpMessageConverter消息转换器要处理的传入信息为：{}", str);
         return super.read(type, contextClass, inputMessage);
     }
+
+
 
 }
