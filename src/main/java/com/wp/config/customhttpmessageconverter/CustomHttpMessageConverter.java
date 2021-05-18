@@ -1,17 +1,15 @@
 package com.wp.config.customhttpmessageconverter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpInputMessage;
-import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 
 /**
  * @Classname CustomHttpMessageConverter
@@ -21,32 +19,20 @@ import java.io.InputStreamReader;
  */
 @Configuration
 @Slf4j
-public class CustomHttpMessageConverter extends AbstractJackson2HttpMessageConverter {
-
-    protected CustomHttpMessageConverter(ObjectMapper objectMapper) {
-        super(objectMapper);
-    }
+public class CustomHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
     @Override
-    protected boolean supports(Class aClass) {
-        return true;
-    }
-
-    @Override
-    protected Object readInternal(Class aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+    public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage)
+            throws IOException, HttpMessageNotReadableException {
         StringBuilder sb = new StringBuilder();
         String line;
-        BufferedReader br = new BufferedReader(new InputStreamReader(httpInputMessage.getBody()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputMessage.getBody()));
         while ((line = br.readLine()) != null) {
             sb.append(line);
         }
         String str = sb.toString();
         log.info("CustomHttpMessageConverter消息转换器要处理的传入信息为：{}", str);
-        return super.readInternal(aClass, httpInputMessage);
+        return super.read(type, contextClass, inputMessage);
     }
 
-    @Override
-    protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-        super.writeInternal(o, httpOutputMessage);
-    }
 }

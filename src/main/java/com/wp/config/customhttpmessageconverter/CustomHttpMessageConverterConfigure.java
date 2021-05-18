@@ -3,7 +3,6 @@ package com.wp.config.customhttpmessageconverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -30,8 +29,10 @@ public class CustomHttpMessageConverterConfigure extends WebMvcConfigurationSupp
         converters.add(new ResourceHttpMessageConverter());
         converters.add(new AllEncompassingFormHttpMessageConverter());
         converters.add(new StringHttpMessageConverter());
-//        converters.add(new CustomHttpMessageConverter(new ObjectMapper()));
-        converters.add(jackson2HttpMessageConverter());
+        // 1、替换MappingJackson2HttpMessageConverter
+        converters.add(new CustomHttpMessageConverter());
+        // 2、重写MappingJackson2HttpMessageConverter中ObjectMapper序列化的内容
+//        converters.add(jackson2HttpMessageConverter());
     }
 
     /**
@@ -40,7 +41,7 @@ public class CustomHttpMessageConverterConfigure extends WebMvcConfigurationSupp
      *
      * @return 值
      */
-    @Bean
+//    @Bean
     public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter() {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         ObjectMapper mapper = new ObjectMapper();
