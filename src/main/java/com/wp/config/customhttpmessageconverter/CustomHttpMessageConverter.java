@@ -43,7 +43,4 @@ public class CustomHttpMessageConverter extends MappingJackson2HttpMessageConver
         log.info("CustomHttpMessageConverter消息转换器要处理的传入信息为：{}", str);
         return super.read(type, contextClass, inputMessage);
     }
-
-
-
 }
