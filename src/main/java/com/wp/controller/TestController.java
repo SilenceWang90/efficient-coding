@@ -3,6 +3,9 @@ package com.wp.controller;
 import com.wp.dto.LinkObjectDto;
 import com.wp.dto.UserFillData;
 import com.wp.service.RetryableService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Classname TestController
@@ -20,11 +24,14 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/test")
+@Slf4j
 public class TestController {
     @Resource
     private RestTemplate restTemplate;
     @Resource
     private RetryableService retryableService;
+    @Autowired
+    private List<HttpMessageConverter> converters;
 
     @GetMapping("/getLinkObjectDtoInfo")
     public LinkObjectDto getLinkObjectDtoInfo() {
@@ -112,6 +119,11 @@ public class TestController {
         userFillData1.setUserName("wangpeng");
         userFillData1.setCreateDate(new Date());
         return userFillData1;
+    }
+
+    @GetMapping("/test1")
+    public void test1() {
+        log.info("所有消息转换器：{}", converters);
     }
 
 }
