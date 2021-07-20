@@ -5,10 +5,13 @@ import com.wp.dto.TestXmlDto;
 import com.wp.service.CommonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import java.io.IOException;
 import java.io.StringWriter;
 
 /**
@@ -21,7 +24,7 @@ import java.io.StringWriter;
 @Service
 public class CommonServiceImpl implements CommonService {
 
-    public static void main(String[] args) throws JAXBException {
+    public static void main(String[] args) throws JAXBException, IOException {
         /** 1、生成要转换xml数据 **/
         TestXmlDto testXmlDto = new TestXmlDto();
         testXmlDto.setAge(12L);
@@ -44,5 +47,13 @@ public class CommonServiceImpl implements CommonService {
         marshaller.marshal(testXmlDto, writer);
         String result = writer.toString();
         log.info("输出转换结果：{}", result);
+        /** 4、BASE64加密**/
+        BASE64Encoder base64Encoder = new BASE64Encoder();
+        String encodeStr = base64Encoder.encode(testXmlDto.toString().getBytes());
+        System.out.println("BASE64加密：" + encodeStr);
+        BASE64Decoder base64Decoder = new BASE64Decoder();
+        byte[] bytes = base64Decoder.decodeBuffer(encodeStr);
+        String decodeResult = new String(bytes);
+        System.out.println("BASE64解密：" + decodeResult);
     }
 }
