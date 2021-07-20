@@ -1,7 +1,11 @@
 package com.wp.controller;
 
+import cn.afterturn.easypoi.word.WordExportUtil;
+import cn.afterturn.easypoi.word.entity.MyXWPFDocument;
+import com.google.common.collect.Maps;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * @Classname FileController
@@ -167,6 +172,35 @@ public class FileController {
             outputStream.write(buffer, 0, len);
         }
         System.out.println("下载");
+    }
+
+    /**
+     * 获取doc文件，并填充doc文件信息
+     *
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("/getDocFileInfo")
+    public void getDocFileInfo(HttpServletResponse response) throws Exception {
+        String filePath = "F:/测试word填充模板.docx";
+        String filename = new String("测试word填充结果.docx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        File file = new File(filePath);
+        InputStream inputStream = new FileInputStream(file);
+
+
+        Map<String, Object> mapParams = Maps.newHashMap();
+        mapParams.put("name", "王鹏");
+        mapParams.put("age", "30");
+        MyXWPFDocument document = new MyXWPFDocument(inputStream);
+        WordExportUtil.exportWord07(document, mapParams);
+        /*XWPFDocument document = WordExportUtil.exportWord07("F:/测试word填充模板.docx", mapParams);*/
+        response.addHeader("Content-Disposition", "attachment;fileName=" + filename);
+        OutputStream outputStream = response.getOutputStream();
+        document.write(outputStream);
+        outputStream.close();
+        /*FileOutputStream fos = new FileOutputStream("C:/Users/wangpeng116/Desktop/测试word填充结果.docx");
+        document.write(fos);
+        fos.close();*/
     }
 }
 
