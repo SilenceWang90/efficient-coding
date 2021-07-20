@@ -11,7 +11,9 @@ import sun.misc.BASE64Encoder;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 /**
@@ -47,7 +49,12 @@ public class CommonServiceImpl implements CommonService {
         marshaller.marshal(testXmlDto, writer);
         String result = writer.toString();
         log.info("输出转换结果：{}", result);
-        /** 4、BASE64加密**/
+        /** 4、xml转Object **/
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        StringReader stringReader = new StringReader(result);
+        TestXmlDto unXmlResult = (TestXmlDto) unmarshaller.unmarshal(stringReader);
+        System.out.println("解析最终结果：" + unXmlResult);
+        /** 5、BASE64加密 **/
         BASE64Encoder base64Encoder = new BASE64Encoder();
         String encodeStr = base64Encoder.encode(testXmlDto.toString().getBytes());
         System.out.println("BASE64加密：" + encodeStr);
