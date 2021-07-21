@@ -189,6 +189,7 @@ public class FileController {
         mapParams.put("name", "王鹏");
         mapParams.put("age", "30");
         MyXWPFDocument document = new MyXWPFDocument(inputStream);
+//        XWPFDocument document = WordExportUtil.exportWord07(filePath, mapParams);
         WordExportUtil.exportWord07(document, mapParams);
         response.addHeader("Content-Disposition", "attachment;fileName=" + filename);
         OutputStream outputStream = response.getOutputStream();
