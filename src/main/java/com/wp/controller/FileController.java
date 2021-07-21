@@ -1,7 +1,5 @@
 package com.wp.controller;
 
-import cn.afterturn.easypoi.word.WordExportUtil;
-import cn.afterturn.easypoi.word.entity.MyXWPFDocument;
 import com.google.common.collect.Maps;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
@@ -190,12 +188,10 @@ public class FileController {
         String filename = new String("测试word填充结果.docx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
         File file = new File(filePath);
         InputStream inputStream = new FileInputStream(file);
+        XWPFDocument document = new XWPFDocument(inputStream);
         Map<String, Object> mapParams = Maps.newHashMap();
         mapParams.put("name", "王鹏");
         mapParams.put("age", "30");
-        MyXWPFDocument document = new MyXWPFDocument(inputStream);
-//        XWPFDocument document = WordExportUtil.exportWord07(filePath, mapParams);
-        WordExportUtil.exportWord07(document, mapParams);
         response.addHeader("Content-Disposition", "attachment;fileName=" + filename);
         OutputStream outputStream = response.getOutputStream();
         document.write(outputStream);
@@ -219,11 +215,11 @@ public class FileController {
         XWPFDocument document = new XWPFDocument(inputStream);
         /** 2、封装参数 */
         Map<String, String> mapParams = Maps.newHashMap();
+        mapParams.put("{{", "");
+        mapParams.put("}}", "");
         mapParams.put("name", "王鹏");
         mapParams.put("age", "30");
         mapParams.put("address", "大连沈阳北京");
-        mapParams.put("{{", "");
-        mapParams.put("}}", "");
         /** 3、获取word文档中的内容，替换模板信息 */
         List<XWPFParagraph> paragraphs = document.getParagraphs();
         // 循环段落信息(按行来的，只要该行存在{{就会进行替换处理)
