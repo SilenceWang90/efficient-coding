@@ -1,5 +1,6 @@
 package com.wp.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Classname FileController
@@ -262,7 +265,7 @@ public class FileController {
     }
 
     /**
-     * @param value 分词之后的词组
+     * @param value      分词之后的词组
      * @param dataParams 参数替换mao
      * @return
      */
@@ -279,5 +282,32 @@ public class FileController {
         return resultValue;
     }
 
+    public static List<String> regMatcher(String text) {
+        // 1、\\{需要对大括号转义，否则正则中大括号中应该是数字，idea会报错
+        // 2、[a-zA-Z0-9]+表示兼容多个字母，如果没有+号则[a-zA-Z0-9]表示只有一个字母或数字才能匹配上
+        String regStr = "\\{\\{[a-zA-Z0-9]+}}";
+        Pattern pattern = Pattern.compile(regStr);
+        Matcher matcher = pattern.matcher(text);
+        List<String> matcherStrs = Lists.newArrayList();
+        while (matcher.find()) {
+            matcherStrs.add(matcher.group());
+        }
+        return matcherStrs;
+    }
+
+
+    /*public static void main(String[] args) {
+        String text = "大家好，my name is S1mple，我是{{name}}，我住在{{age}}。";
+        // 1、\\{需要对大括号转义，否则正则中大括号中应该是数字，idea会报错
+        // 2、[a-zA-Z0-9]+表示兼容多个字母，如果没有+号则[a-zA-Z0-9]表示只有一个字母或数字才能匹配上
+        String regStr = "\\{\\{[a-zA-Z0-9]+}}";
+        Pattern pattern = Pattern.compile(regStr);
+        Matcher matcher = pattern.matcher(text);
+        List<String> matcherStrs = Lists.newArrayList();
+        while (matcher.find()) {
+            matcherStrs.add(matcher.group());
+        }
+        System.out.println(matcherStrs.toString());
+    }*/
 }
 
