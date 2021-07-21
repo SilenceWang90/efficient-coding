@@ -215,8 +215,10 @@ public class FileController {
         XWPFDocument document = new XWPFDocument(inputStream);
         /** 2、封装参数 */
         Map<String, String> mapParams = Maps.newHashMap();
+        // 模板中的括号自行删除
         mapParams.put("{{", "");
         mapParams.put("}}", "");
+        // 模板中的其他数据进行替换
         mapParams.put("name", "王鹏");
         mapParams.put("age", "30");
         mapParams.put("address", "大连沈阳北京");
