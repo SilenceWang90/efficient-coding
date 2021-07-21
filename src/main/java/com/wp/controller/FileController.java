@@ -260,7 +260,7 @@ public class FileController {
     }
 
     /**
-     * @param value
+     * @param value 分词之后的词组
      * @param dataParams 参数替换mao
      * @return
      */
