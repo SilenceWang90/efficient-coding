@@ -5,6 +5,9 @@ import cn.afterturn.easypoi.word.entity.MyXWPFDocument;
 import com.google.common.collect.Maps;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Classname FileController
@@ -196,5 +201,85 @@ public class FileController {
         document.write(outputStream);
         outputStream.close();
     }
+
+
+    /**
+     * 获取doc文件，并填充doc文件信息：注意，如果分词中获得的run不正确，在文本文档中打好文字再复制粘贴到word中
+     *
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("/getDocFileInfoByPoi")
+    public void getDocFileInfoByPoi(HttpServletResponse response) throws Exception {
+        /** 1、获取文件 */
+        String filePath = "F:/测试word填充模板.docx";
+        String filename = new String("测试word填充结果.docx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        File file = new File(filePath);
+        InputStream inputStream = new FileInputStream(file);
+        XWPFDocument document = new XWPFDocument(inputStream);
+        /** 2、封装参数 */
+        Map<String, String> mapParams = Maps.newHashMap();
+        mapParams.put("name", "王鹏");
+        mapParams.put("age", "30");
+        mapParams.put("address", "大连沈阳北京");
+        mapParams.put("{{", "");
+        mapParams.put("}}", "");
+        /** 3、获取word文档中的内容，替换模板信息 */
+        List<XWPFParagraph> paragraphs = document.getParagraphs();
+        // 循环段落信息(按行来的，只要该行存在{{就会进行替换处理)
+        for (XWPFParagraph paragraph : paragraphs) {
+            String text = paragraph.getText();
+            // 检索该行文档中的所有文本，判断此段落是否需要替换
+            if (checkText(text)) {
+                List<XWPFRun> runs = paragraph.getRuns();
+                // 相当于分词，针对需要替换的词进行处理
+                for (XWPFRun run : runs) {
+                    // 替换模板中占位符的值
+                    String ob = changeValue(run.toString(), mapParams);
+                    if (mapParams.containsKey(run.toString())) {
+                        run.setText(ob, 0);
+                    }
+                }
+            }
+        }
+        /** 4、输出word文档 */
+        response.addHeader("Content-Disposition", "attachment;fileName=" + filename);
+        OutputStream outputStream = response.getOutputStream();
+        document.write(outputStream);
+        outputStream.close();
+    }
+
+    /**
+     * 检查文本中是否包含指定的字符(此处为“{{}}”)，并返回值
+     *
+     * @param text 文档内容
+     * @return 文档是否包含特殊占位符
+     */
+    public static boolean checkText(String text) {
+        boolean check = false;
+        if (text.contains("{{")) {
+            check = true;
+        }
+        return check;
+    }
+
+    /**
+     * @param value
+     * @param dataParams 参数替换mao
+     * @return
+     */
+    public static String changeValue(String value, Map<String, String> dataParams) {
+        Set<Map.Entry<String, String>> textSets = dataParams.entrySet();
+        String resultValue = "";
+        for (Map.Entry<String, String> textSet : textSets) {
+            // 匹配模板与替换值 格式{{key}}
+            String key = textSet.getKey();
+            if (value.contains(key)) {
+                resultValue = textSet.getValue();
+            }
+        }
+        return resultValue;
+    }
+
 }
 
