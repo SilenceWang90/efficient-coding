@@ -92,8 +92,11 @@ public class FileServiceImpl implements FileService {
         ) {
             //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
             String filename = new String(file.getName().getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            // 此配置保证文件二进制信息被解析成正确的文件，否则如果只有下面的content-type获取到的就是一个二进制信息的文件
             response.setHeader("content-disposition", "attachment;filename=" + filename);
-//            response.setContentType("application/octet-stream;charset=UTF-8");
+            // 一般情况只要有content-disposition就可以正常下载文件；如果不配置content-disposition只有content-type，则下载下载来的将是一个二进制信息的文件
+            // 移动端安卓策略为先找Content_Type，找不到就找content-disposition，都找不到下载的就是.bin文件
+            response.setContentType("application/octet-stream;charset=UTF-8");
             // 缓冲区
             byte[] buffer = new byte[1024];
             // 读取文件流长度

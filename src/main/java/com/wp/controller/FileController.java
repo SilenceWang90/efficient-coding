@@ -69,9 +69,6 @@ public class FileController {
     @GetMapping("/downloadFile")
     public String downloadFile(String fileId, HttpServletResponse response) {
         fileService.download(fileId, response);
-        // 对于文件下载功能，为了保证文件可以被最终下载有时需要定义响应信息，移动端安卓系统可能就需要此配置来保证文件可以正常下载
-        /*response.setHeader("content-disposition", "attachment;filename=" + fileFullNameWithSuffix);
-        response.setContentType("application/octet-stream;charset=UTF-8");*/
         return "文件下载成功";
     }
 
