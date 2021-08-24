@@ -376,34 +376,42 @@ public class FileController {
         String zipFileName = "压缩包文件.zip";
         response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
         response.setContentType("application/octet-stream;charset=UTF-8");
-        /** 1、获取源文件*/
+        /** 1、获取源文件(要打包下载的文件)*/
         File file1 = new File("F:\\测试word填充模板.docx");
         File file2 = new File("F:\\审批通过数据.xlsx");
         File file3 = new File("F:\\主题域 & 数据对象BO & 数据项BIV1.1.xlsx");
         List<File> files = Lists.newArrayList(file1, file2, file3);
-        /** 2、得到ZipOutputStream用于生成zip文件*/
-        OutputStream outputStream = response.getOutputStream();
-        // 获得zip输出流
-        ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-        /** 3、将源文件写入zip文件中*/
-        for (File file : files) {
-            ZipEntry zipEntry = new ZipEntry(file.getName());
-            zipOutputStream.putNextEntry(zipEntry);
-            InputStream inputStream = new FileInputStream(file);
-            // 缓冲区
-            byte[] buffer = new byte[1024];
-            // 读取文件流长度
-            int len;
-            // 读取到的文件内容没有结束，则写入输出流中
-            while ((len = inputStream.read(buffer)) > 0) {
-                // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
-                // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
-                zipOutputStream.write(buffer, 0, len);
+        try (
+                /** 2、得到ZipOutputStream用于生成zip文件*/
+                OutputStream outputStream = response.getOutputStream();
+                // 获得zip输出流
+                ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
+        ) {
+            /** 3、遍历file文件信息，将源文件写入zip输出流中*/
+            for (File file : files) {
+                ZipEntry zipEntry = new ZipEntry(file.getName());
+                zipOutputStream.putNextEntry(zipEntry);
+                InputStream inputStream = new FileInputStream(file);
+                // 缓冲区
+                byte[] buffer = new byte[1024];
+                // 读取文件流长度
+                int len;
+                // 读取到的文件内容没有结束，则写入输出流中
+                while ((len = inputStream.read(buffer)) > 0) {
+                    // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
+                    // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
+                    zipOutputStream.write(buffer, 0, len);
+                }
+                // 文件读取完关闭文件输入流
+                inputStream.close();
             }
+            // 必须有下面2个关闭方法，否则zip导出的文件是无法打开的(因为用了try-with-resource，所以close方法不需要显式调用)
+            zipOutputStream.closeEntry();
+            // zipOutputStream.close();
+        } catch (Exception e) {
+            log.error("打包下载异常：", e);
         }
-        // 必须有下面2个关闭方法，否则zip导出的文件是无法打开的
-        zipOutputStream.closeEntry();
-        zipOutputStream.close();
+
     }
 
 }
