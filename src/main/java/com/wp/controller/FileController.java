@@ -405,7 +405,9 @@ public class FileController {
                 // 文件读取完关闭文件输入流
                 inputStream.close();
             }
+            /** 4、最终生成zip文件必须关闭文件流信息*/
             // 必须有下面2个关闭方法，否则zip导出的文件是无法打开的(因为用了try-with-resource，所以close方法不需要显式调用)
+            // zipOutputStream.closeEntry();关闭后不影响下载，但是最好保留
             zipOutputStream.closeEntry();
             // zipOutputStream.close();
         } catch (Exception e) {
