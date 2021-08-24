@@ -315,7 +315,7 @@ public class FileController {
 
 
     /**
-     * 批量上传
+     * zip文件上传并解压
      *
      * @param sourceFile zip包文件
      */
