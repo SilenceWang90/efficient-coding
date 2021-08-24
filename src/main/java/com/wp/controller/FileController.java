@@ -4,27 +4,30 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @Classname FileController
@@ -309,5 +312,67 @@ public class FileController {
         }
         System.out.println(matcherStrs.toString());
     }*/
+
+
+    /**
+     * 批量上传
+     *
+     * @param sourceFile zip包文件
+     */
+    @RequestMapping("/batchUpload")
+    public void batchUpload(@RequestParam("batchFile") @NotNull MultipartFile sourceFile) {
+        /** 1、将multipartfile转成zipfile*/
+        File file = null;
+        ZipFile zipFile = null;
+        try (
+                InputStream inputStream = sourceFile.getInputStream()
+        ) {
+            // zip文件放在临时目录，该参数可以根据需要配置
+            file = new File("F:\\tempwp.zip");
+            // 需要apache的commons-io包
+            // 将上传的文件放到file中
+            FileUtils.copyInputStreamToFile(inputStream, file);
+            // 解决文件名称中，中文字符集编码错误的问题
+            zipFile = new ZipFile(file, Charset.forName("GBK"));
+            /** 2、解压zip包获取所有文件*/
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            // 解压的文件放在目标目录，该参数可以根据需要配置
+            String target = "F:\\";
+            /** 3、遍历zip包的所有文件*/
+            while (entries.hasMoreElements()) {
+                ZipEntry zipEntry = entries.nextElement();
+                // 当前解压的文件
+                File currentUnzipFile = new File(target, zipEntry.getName());
+                // 获取当前文件的文件流
+                InputStream in = zipFile.getInputStream(zipEntry);
+                OutputStream out = new FileOutputStream(currentUnzipFile);
+                // 文件信息写入到输出流
+                IOUtils.copy(in, out);
+                // 每写完一个文件即关闭输出流
+                out.close();
+            }
+        } catch (Exception e) {
+            log.error("压缩文件上传并解压失败：{},文件名称：{}", e, sourceFile.getName());
+        } finally {
+            /** 4、删除zip文件(一般解压后不需要原zip文件，因此为了节省空间删除zip文件)。切记一定要关闭文件流才可以删除文件，否则资源被占用无法删除*/
+            try {
+                zipFile.close();
+            } catch (IOException e) {
+                log.error("zip压缩包文件删除失败：{}，文件名称：{}", e, sourceFile.getName());
+            }
+            file.delete();
+        }
+    }
+
+    /**
+     * 批量下载(打包下载，zip包)
+     *
+     * @param response zip文件返回
+     */
+    @RequestMapping("/batchDownload")
+    public void batchDownload(HttpServletResponse response) {
+
+    }
+
 }
 
