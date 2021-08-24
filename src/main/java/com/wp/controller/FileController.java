@@ -321,7 +321,6 @@ public class FileController {
      */
     @RequestMapping("/batchUpload")
     public void batchUpload(@RequestParam("batchFile") @NotNull MultipartFile sourceFile) {
-        /** 1、将multipartfile转成zipfile*/
         File file = null;
         ZipFile zipFile = null;
         try (
@@ -331,6 +330,7 @@ public class FileController {
             file = new File("F:\\tempwp.zip");
             // 需要apache的commons-io包
             // 将上传的文件放到file中
+            /** 1、将multipartfile转成zipfile*/
             FileUtils.copyInputStreamToFile(inputStream, file);
             // 解决文件名称中，中文字符集编码错误的问题
             zipFile = new ZipFile(file, Charset.forName("GBK"));
