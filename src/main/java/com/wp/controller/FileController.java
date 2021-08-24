@@ -401,6 +401,7 @@ public class FileController {
                 zipOutputStream.write(buffer, 0, len);
             }
         }
+        // 必须有下面2个关闭方法，否则zip导出的文件是无法打开的
         zipOutputStream.closeEntry();
         zipOutputStream.close();
     }
