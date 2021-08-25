@@ -145,6 +145,12 @@
             <artifactId>hutool-all</artifactId>
             <version>5.5.9</version>
         </dependency>
+        <!-- 图片识别依赖包，3.X之后才支持中文 -->
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>3.2.1</version>
+        </dependency>
     </dependencies>
 
 </project>
