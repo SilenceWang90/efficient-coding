@@ -388,8 +388,12 @@ public class FileController {
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
         ) {
             /** 3、遍历file文件信息，将源文件写入zip输出流中*/
+            int i = 0;
             for (File file : files) {
-                ZipEntry zipEntry = new ZipEntry(file.getName());
+                /** 知识点：如果打包文件不需要文件夹目录区分，都是直接打包可以获得的，则ZipEntry的名称就是文件名称即可；
+                 * 如果zip文件有层级目录区分，那么只需要对ZipEntry的名称上，将目录层级加上即可，如下就是"++i+'\\'"，这样打包的时候ZipStream就会自动生成文件夹目录**/
+                /*ZipEntry zipEntry = new ZipEntry(file.getName());*/
+                ZipEntry zipEntry = new ZipEntry(++i + "\\" + file.getName());
                 zipOutputStream.putNextEntry(zipEntry);
                 InputStream inputStream = new FileInputStream(file);
                 // 缓冲区
