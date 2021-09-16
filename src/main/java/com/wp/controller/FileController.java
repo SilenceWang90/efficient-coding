@@ -390,7 +390,8 @@ public class FileController {
             /** 3、遍历file文件信息，将源文件写入zip输出流中*/
             int i = 0;
             for (File file : files) {
-                /** 知识点：1、如果打包文件不需要文件夹目录区分，都是解压后直接获得文件，则ZipEntry的名称就是文件名称即可；
+                /** 知识点：
+                 * 1、如果打包文件不需要文件夹目录区分，都是解压后直接获得文件，则ZipEntry的名称就是文件名称即可；
                  * 2、如果zip文件解压后要有层级目录区分，那么只需要在ZipEntry的名称上，在文件名称前面将目录层级加上即可，如下就是"++i+'\\'+文件名称"，
                  * 这样打包下载的时候ZipStream就会自动生成文件所在文件夹目录**/
                 /*ZipEntry zipEntry = new ZipEntry(file.getName());*/
