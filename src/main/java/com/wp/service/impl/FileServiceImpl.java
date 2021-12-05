@@ -91,7 +91,7 @@ public class FileServiceImpl implements FileService {
                 InputStream inputStream = new FileInputStream(file)
         ) {
             //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
-            String filename = new String(file.getName().getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            String filename = new String(file.getName().getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             // 此配置保证文件二进制信息被解析成正确的文件，否则如果只有下面的content-type获取到的就是一个二进制信息的文件
             response.setHeader("content-disposition", "attachment;filename=" + filename);
             // 一般情况只要有content-disposition就可以正常下载文件；如果不配置content-disposition只有content-type，则下载下载来的将是一个二进制信息的文件
@@ -117,7 +117,7 @@ public class FileServiceImpl implements FileService {
         try (
                 OutputStream outputStream = response.getOutputStream()
         ) {
-            String filename = new String("excel导出的文件.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            String filename = new String("excel导出的文件.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             response.setHeader("content-disposition", "attachment;filename=" + filename);
             // 1、创建EasyExcel导出对象，注明输出流以及对应的导出实体类型，在导出实体类型中增加easyexcel的注解功能(指明列以及样式等等)
             ExcelWriter excelWriter = EasyExcelFactory.write(outputStream, UserExportDto.class).build();
@@ -167,7 +167,7 @@ public class FileServiceImpl implements FileService {
     public void exportWithFillDataInTemplate(HttpServletResponse response) throws UnsupportedEncodingException {
         // 1、获取模板
         String templateFilePath = "C:/Users/wangpeng116/Desktop/导出模板.xlsx";
-        String filename = new String("导出模板.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filename = new String("导出模板.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         response.setHeader("content-disposition", "attachment;filename=" + filename);
         response.setCharacterEncoding("UTF-8");
         // 2、查询数据
@@ -229,7 +229,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void asyncExport(HttpServletResponse response) {
         try {
-            String filename = new String("excel导出的文件.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+            String filename = new String("excel导出的文件.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             response.setHeader("content-disposition", "attachment;filename=" + filename);
 
             List<UserExportDto> list = Lists.newArrayList();

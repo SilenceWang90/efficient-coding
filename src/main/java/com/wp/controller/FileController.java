@@ -115,7 +115,7 @@ public class FileController {
     @GetMapping("/exportExcelByte")
     public byte[] exportExcel() throws IOException {
         //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
-        String filename = new String("byte数组的Excel文件".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filename = new String("byte数组的Excel文件".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         String filePath = "F:/审批通过数据.xlsx";
         File file = new File(filePath);
         InputStream inputStream = new FileInputStream(file);
@@ -139,7 +139,7 @@ public class FileController {
         // 别人的输出就是我的输入
         byte[] bytes = entity.getBody();
         //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
-        String filename = new String("我是导出的excelByte.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filename = new String("我是导出的excelByte.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         response.setHeader("content-disposition", "attachment;filename=" + filename);
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(bytes);
