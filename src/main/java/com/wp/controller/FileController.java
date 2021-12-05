@@ -169,7 +169,7 @@ public class FileController {
         InputStream inputStream = entity.getBody().getInputStream();
         OutputStream outputStream = response.getOutputStream();
         //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
-        String filename = new String("我是导出的excel.xlsx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filename = new String("我是导出的excel.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         response.setHeader("content-disposition", "attachment;filename=" + filename);
         // 缓冲区
         byte[] buffer = new byte[1024];
@@ -193,7 +193,7 @@ public class FileController {
     @GetMapping("/getDocFileInfo")
     public void getDocFileInfo(HttpServletResponse response) throws Exception {
         String filePath = "F:/测试word填充模板.docx";
-        String filename = new String("测试word填充结果.docx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filename = new String("测试word填充结果.docx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         File file = new File(filePath);
         InputStream inputStream = new FileInputStream(file);
         XWPFDocument document = new XWPFDocument(inputStream);
@@ -217,7 +217,7 @@ public class FileController {
     public void getDocFileInfoByPoi(HttpServletResponse response) throws Exception {
         /** 1、获取文件 */
         String filePath = "F:/测试word填充模板.docx";
-        String filename = new String("测试word填充结果.docx".getBytes("GBK"), StandardCharsets.ISO_8859_1);
+        String filename = new String("测试word填充结果.docx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         File file = new File(filePath);
         InputStream inputStream = new FileInputStream(file);
         XWPFDocument document = new XWPFDocument(inputStream);
