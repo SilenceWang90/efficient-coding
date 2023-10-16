@@ -382,6 +382,7 @@ public class FileController {
         List<File> files = Lists.newArrayList(file1, file2);
         try (
                 /** 2、得到ZipOutputStream用于生成zip文件*/
+                // 将文件输出到指定位置还是直接输出到response的输出流根据业务需要决定选择即可～
                 /*// 最终的压缩文件输出到指定目录
                 OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/wangpeng/temp/压缩包文件.zip");*/
                 // 最终的压缩文件输出到resonse输出流
