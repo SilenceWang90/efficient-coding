@@ -377,12 +377,12 @@ public class FileController {
         response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
         response.setContentType("application/octet-stream;charset=UTF-8");
         /** 1、获取源文件(要打包下载的文件)*/
-        File file1 = new File("F:\\测试word填充模板.docx");
-        File file2 = new File("F:\\审批通过数据.xlsx");
-        File file3 = new File("F:\\主题域 & 数据对象BO & 数据项BIV1.1.xlsx");
-        List<File> files = Lists.newArrayList(file1, file2, file3);
+        File file1 = new File("/Users/mlamp/Desktop/工作/思路以及问题汇总.txt");
+        File file2 = new File("/Users/mlamp/Desktop/工作/工程initializer脚手架.xlsx");
+        List<File> files = Lists.newArrayList(file1, file2);
         try (
                 /** 2、得到ZipOutputStream用于生成zip文件*/
+//                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/wangpeng/temp/压缩包文件.zip");
                 OutputStream outputStream = response.getOutputStream();
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
