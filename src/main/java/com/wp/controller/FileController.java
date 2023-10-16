@@ -367,7 +367,7 @@ public class FileController {
     }
 
     /**
-     * 批量下载(打包下载，zip包)
+     * 打包下载(zip包)，对多个指定文件
      *
      * @param response zip文件返回
      */
@@ -419,6 +419,17 @@ public class FileController {
         } catch (Exception e) {
             log.error("打包下载异常：", e);
         }
+
+    }
+
+    /**
+     * 打包下载(zip包)，对目录下载
+     * 在对文件下载的基础上使用递归找到目录下的所有文件并压缩打包
+     *
+     * @param response zip文件返回
+     */
+    @RequestMapping("/batchDownload")
+    public void batchDownloadPath(HttpServletResponse response) throws IOException {
 
     }
 
