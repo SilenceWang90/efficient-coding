@@ -428,7 +428,7 @@ public class FileController {
      *
      * @param response zip文件返回
      */
-    @RequestMapping("/batchDownload")
+    @RequestMapping("/batchDownloadPath")
     public void batchDownloadPath(HttpServletResponse response) throws IOException {
         /*https://blog.51cto.com/u_16175485/6831282
         https://blog.csdn.net/m0_59680416/article/details/131108395*/
