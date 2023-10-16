@@ -382,7 +382,9 @@ public class FileController {
         List<File> files = Lists.newArrayList(file1, file2);
         try (
                 /** 2、得到ZipOutputStream用于生成zip文件*/
-//                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/wangpeng/temp/压缩包文件.zip");
+                /*// 最终的压缩文件输出到指定目录
+                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/wangpeng/temp/压缩包文件.zip");*/
+                // 最终的压缩文件输出到resonse输出流
                 OutputStream outputStream = response.getOutputStream();
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
