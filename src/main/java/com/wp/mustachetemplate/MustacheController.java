@@ -19,7 +19,29 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/mustache")
 public class MustacheController {
-    @GetMapping("/getCreateFile")
+    @GetMapping("/demo")
+    public void demo(){
+        MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+        Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
+
+        Map<String,String> params = Maps.newHashMap();
+        params.put("basePackage","com.wp");
+        StringWriter stringWriter = new StringWriter();
+
+        mustache.execute(stringWriter,params);
+        System.out.println(stringWriter.toString());
+
+    }
+
+    /**
+     * OutputStream和OutputStreamWriter是Java编程语言中的两个不同的类，用于处理输出流。
+     * OutputStream是一个抽象类，它是所有输出流类的基类。它提供了一系列用于写入字节的方法，用于将字节写入到目标设备或文件中。
+     * OutputStreamWriter是一个字符流类，它是OutputStream的子类。它将字符转换为字节，并将字节写入到指定的输出流中。它提供了一系列用于写入字符的方法，并且可以指定字符编码。
+     * 简而言之，OutputStream用于写入字节数据(OutputStream.write(byte[], 0, len))，而OutputStreamWriter用于将字符数据转换为字节数据并写入输出流(OutputStreamWriter.write("成功"))。
+     * 而且区别显而易见，一个直接写入内容，一个需要专程byte[]再写入
+     * 通过使用OutputStreamWriter，我们还可以指定字符编码，以确保正确地将字符转换为字节。
+     */
+    @GetMapping("/createFile")
     public void createFile(){
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
