@@ -151,6 +151,11 @@
             <artifactId>tess4j</artifactId>
             <version>3.2.1</version>
         </dependency>
+        <!-- js模板引擎Mustache，java的实现jMustache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mustache</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
