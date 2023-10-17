@@ -153,8 +153,9 @@
         </dependency>
         <!-- js模板引擎Mustache，java的实现jMustache -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mustache</artifactId>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.4</version>
         </dependency>
     </dependencies>
 
