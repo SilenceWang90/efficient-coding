@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.Map;
 
@@ -42,16 +45,14 @@ public class MustacheController {
      * 通过使用OutputStreamWriter，我们还可以指定字符编码，以确保正确地将字符转换为字节。
      */
     @GetMapping("/createFile")
-    public void createFile(){
+    public void createFile() throws IOException {
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
 
         Map<String,String> params = Maps.newHashMap();
         params.put("basePackage","com.wp");
-        StringWriter stringWriter = new StringWriter();
+        OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/TestMustacheController.java");
 
-        mustache.execute(stringWriter,params);
-        System.out.println(stringWriter.toString());
-
+        mustache.execute(fileWriter,params);
     }
 }
