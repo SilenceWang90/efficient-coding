@@ -30,11 +30,12 @@
         {{/dependencies}}
     </dependencies>
 
-    {{#condition}}
-        condition为true的时候
-    {{/condition}}
-    {{^condition}}
-        condition为false的时候
-    {{/condition}}
+    <!-- if-else语法 -->
+    {{!condition}}
+<!--        condition为true的时候-->
+    {{!/condition}}
+    {{!^condition}}
+<!--        condition为false的时候-->
+    {{!/condition}}
 
 </project>
