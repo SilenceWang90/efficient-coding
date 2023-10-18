@@ -78,8 +78,8 @@ public class MustacheController {
      *
      * @throws IOException
      */
-    @GetMapping("/createFileWithForLoop")
-    public void createFileWithForLoop() throws IOException {
+    @GetMapping("/createFileWithForLoopAndWith")
+    public void createFileWithForLoopAndWith() throws IOException {
         // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象。
         // 无参构造函数为默认从classpath中获取.mustache模板；可以传入resourceRoot指定模板文件位置
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
@@ -95,6 +95,8 @@ public class MustacheController {
         dependencies.add(dependency2);
         dependencies.add(dependency3);
         params.setDependencies(dependencies);
+        // 同if-else标签的操作
+        params.setCondition(true);
 
         // 3、指定写入后的输出：可输出成任何类型文件～
         OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/pom.xml");

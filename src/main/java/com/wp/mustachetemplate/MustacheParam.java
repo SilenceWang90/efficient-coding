@@ -19,4 +19,5 @@ import java.util.List;
 public class MustacheParam {
     private String basePackage;
     private List<Dependency> dependencies;
+    private boolean condition;
 }
