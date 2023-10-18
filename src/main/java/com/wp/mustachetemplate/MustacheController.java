@@ -119,7 +119,7 @@ public class MustacheController {
     public void mockRealInitializerProject(@RequestBody @Valid List<InitializerProjectRequestParam> initialParams
             , HttpServletResponse response) throws IOException {
         // 创建读取.mustache模板的工厂类，并生成mustache工具对象。
-        MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+        MustacheFactory mustacheFactory = new DefaultMustacheFactory("templates");
         Mustache mustache = null;
         /**
          * 1、遍历参数，逐个生成文件
