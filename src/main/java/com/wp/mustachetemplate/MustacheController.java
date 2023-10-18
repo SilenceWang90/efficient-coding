@@ -27,11 +27,11 @@ public class MustacheController {
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
 
-        Map<String,String> params = Maps.newHashMap();
-        params.put("basePackage","com.wp");
+        Map<String, String> params = Maps.newHashMap();
+        params.put("basePackage", "com.wp");
         StringWriter stringWriter = new StringWriter();
 
-        mustache.execute(stringWriter,params).flush();
+        mustache.execute(stringWriter, params).flush();
         System.out.println(stringWriter.toString());
 
     }
@@ -46,19 +46,20 @@ public class MustacheController {
      */
     @GetMapping("/createFile")
     public void createFile() throws IOException {
-        // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象
+        // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象。
+        // 无参构造函数为默认从classpath中获取.mustache模板；可以传入resourceRoot指定模板文件位置
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
 
         // 2、创建填充模板的参数
-        Map<String,String> params = Maps.newHashMap();
-        params.put("basePackage","com.wp");
+        Map<String, String> params = Maps.newHashMap();
+        params.put("basePackage", "com.wp");
 
         // 3、指定写入后的输出
         OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/TestMustacheController.java");
 
         // 4、执行写入
-        mustache.execute(fileWriter,params);
+        mustache.execute(fileWriter, params);
         fileWriter.flush();
 
         // 5、关闭I/O
@@ -68,6 +69,28 @@ public class MustacheController {
     /**
      * for循环写文件
      * 场景：pom文件添加<dependency>
+     *
+     * @throws IOException
      */
+    @GetMapping("/createFileWithForLoop")
+    public void createFileWithForLoop() throws IOException {
+        // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象。
+        // 无参构造函数为默认从classpath中获取.mustache模板；可以传入resourceRoot指定模板文件位置
+        MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+        Mustache mustache = mustacheFactory.compile("pom.xml.mustache");
 
+        // 2、创建填充模板的参数
+        Map<String, String> params = Maps.newHashMap();
+        params.put("", "");
+
+        // 3、指定写入后的输出：可输出成任何类型文件～
+        OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/pom.xml");
+
+        // 4、执行写入
+        mustache.execute(fileWriter, params);
+        fileWriter.flush();
+
+        // 5、关闭I/O
+        fileWriter.close();
+    }
 }
