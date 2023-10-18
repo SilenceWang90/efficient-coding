@@ -128,9 +128,10 @@ public class MustacheController {
             // 1.1、获取模板
             mustache = mustacheFactory.compile(template.getMustacheTemplateName());
             // 1.2、获取模板参数
-            Map<String,Object> params = template.getParams();
-            // 1.3、指定写入后的输出：地址以及文件类型
-            OutputStreamWriter fileWriter = new FileWriter(template.getOutputUri());
+            Map<String, Object> params = template.getParams();
+            // 1.3、指定写入后的输出：地址以及文件类型。
+            // 其中application.properties文件是追加的方式写入
+            OutputStreamWriter fileWriter = new FileWriter(template.getOutputUri(), true);
             // 1.4、执行写入
             mustache.execute(fileWriter, params);
             fileWriter.flush();
