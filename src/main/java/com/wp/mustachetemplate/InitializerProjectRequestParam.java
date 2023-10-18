@@ -25,8 +25,8 @@ public class InitializerProjectRequestParam {
     // 3、参数信息
     // 3.1、普通类型参数变量
     private Map<String, Object> params;
-    // 3.2、集合类型参数变量：目前仅pom渲染时会用到此参数
-    private List<Map<String, Object>> collectionParams;
+    // 3.2、pom文件dependency信息
+    private List<Dependency> dependencies;
     // 4、文件输出地址
     private String outputUri;
 }
