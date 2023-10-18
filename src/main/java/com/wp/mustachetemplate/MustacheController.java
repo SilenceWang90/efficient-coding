@@ -60,6 +60,7 @@ public class MustacheController {
         // 4、执行写入
         mustache.execute(fileWriter,params);
         fileWriter.flush();
+        fileWriter.close();
     }
 
     /**
