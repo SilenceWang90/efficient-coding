@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -27,7 +28,7 @@ public class MustacheController {
     @GetMapping("/demo")
     public void demo() throws IOException {
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
-        Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
+        Mustache mustache = mustacheFactory.compile("templates/TestMustacheController.java.mustache");
 
         Map<String, String> params = Maps.newHashMap();
         params.put("basePackage", "com.wp");
@@ -51,7 +52,7 @@ public class MustacheController {
         // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象。
         // 无参构造函数为默认从classpath中获取.mustache模板；可以传入resourceRoot指定模板文件位置
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
-        Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
+        Mustache mustache = mustacheFactory.compile("templates/TestMustacheController.java.mustache");
 
         // 2、创建填充模板的参数
         // 2.1、map的方式
@@ -83,14 +84,14 @@ public class MustacheController {
         // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象。
         // 无参构造函数为默认从classpath中获取.mustache模板；可以传入resourceRoot指定模板文件位置
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
-        Mustache mustache = mustacheFactory.compile("pom.xml.mustache");
+        Mustache mustache = mustacheFactory.compile("templates/pom.xml.mustache");
 
         // 2、创建填充模板的参数
         MustacheParam params = new MustacheParam();
         List<Dependency> dependencies = Lists.newArrayList();
-        Dependency dependency1 = new Dependency("org.springframework.boot","spring-boot-starter-web","2.1.17");
-        Dependency dependency2 = new Dependency("com.google.guava","guava","18.0");
-        Dependency dependency3 = new Dependency("org.projectlombok","lombok","0.6.11");
+        Dependency dependency1 = new Dependency("org.springframework.boot", "spring-boot-starter-web", "2.1.17");
+        Dependency dependency2 = new Dependency("com.google.guava", "guava", "18.0");
+        Dependency dependency3 = new Dependency("org.projectlombok", "lombok", "0.6.11");
         dependencies.add(dependency1);
         dependencies.add(dependency2);
         dependencies.add(dependency3);
@@ -108,4 +109,15 @@ public class MustacheController {
         // 5、关闭I/O
         fileWriter.close();
     }
+
+    /**
+     * mock数据接口
+     *
+     * @param response
+     */
+    @GetMapping("/mockRealInitializerProject")
+    public void mockRealInitializerProject(HttpServletResponse response) {
+
+    }
+
 }
