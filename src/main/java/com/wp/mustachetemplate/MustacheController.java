@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/mustache")
 public class MustacheController {
     @GetMapping("/demo")
-    public void demo(){
+    public void demo() throws IOException {
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
 
@@ -31,7 +31,7 @@ public class MustacheController {
         params.put("basePackage","com.wp");
         StringWriter stringWriter = new StringWriter();
 
-        mustache.execute(stringWriter,params);
+        mustache.execute(stringWriter,params).flush();
         System.out.println(stringWriter.toString());
 
     }
@@ -59,6 +59,7 @@ public class MustacheController {
 
         // 4、执行写入
         mustache.execute(fileWriter,params);
+        fileWriter.flush();
     }
 
     /**
