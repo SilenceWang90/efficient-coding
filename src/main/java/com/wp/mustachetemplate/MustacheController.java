@@ -5,11 +5,10 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -113,10 +112,35 @@ public class MustacheController {
     /**
      * mock数据接口
      *
-     * @param response
+     * @param initialParams 生成组件的参数
+     * @param response      响应信息，打包下载
      */
-    @GetMapping("/mockRealInitializerProject")
-    public void mockRealInitializerProject(HttpServletResponse response) {
+    @PostMapping("/mockRealInitializerProject")
+    public void mockRealInitializerProject(@RequestBody @Valid List<InitializerProjectRequestParam> initialParams
+            , HttpServletResponse response) throws IOException {
+        // 创建读取.mustache模板的工厂类，并生成mustache工具对象。
+        MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+        Mustache mustache = null;
+        /**
+         * 1、遍历参数，逐个生成文件
+         */
+        for (InitializerProjectRequestParam template : initialParams) {
+            // 1.1、获取模板
+            mustache = mustacheFactory.compile(template.getMustacheTemplateName());
+            // 1.2、获取模板参数
+            Map<String,Object> params = template.getParams();
+            // 1.3、指定写入后的输出：地址以及文件类型
+            OutputStreamWriter fileWriter = new FileWriter(template.getOutputUri());
+            // 1.4、执行写入
+            mustache.execute(fileWriter, params);
+            fileWriter.flush();
+            // 1.5、关闭I/O
+            fileWriter.close();
+        }
+        /**
+         * 2、todo：打zip包，需要递归目录进行打包操作～待验证
+         */
+
 
     }
 

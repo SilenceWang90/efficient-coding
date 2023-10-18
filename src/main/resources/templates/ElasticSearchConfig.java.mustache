@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ElasticSearchConfig {
+    @Resource
+    private ElasticSearchConfigurationProperties properties;
 
     /**
      * 配置RestHighLevelClient链接
@@ -26,7 +28,7 @@ public class ElasticSearchConfig {
     @Bean
     public RestHighLevelClient customerRestHighLevelClient() {
         // 1、配置ElasticSearch服务链接(多个的话即集群模式时放入多个HttpHost对象即可)
-        /*RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost("localhost", 9200, "http"),
+        /*RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost(properties.getHost(), properties.getPort(), properties.getProtocol()),
         new HttpHost("localhost", 9201, "http"));*/
         RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost("localhost", 9200, "http"));
         // 2、账号密码设置(启动时不会报错，发起请求时会报错)
