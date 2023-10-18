@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -48,7 +49,7 @@ public class CustomHttpMessageConverterConfigure extends WebMvcConfigurationSupp
      */
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        for (int i = 0; i < converters.size(); i++) {
+        /*for (int i = 0; i < converters.size(); i++) {
             HttpMessageConverter converter = converters.get(i);
             // 替换MappingJackson2HttpMessageConverter
             if (converter.getClass().equals(MappingJackson2HttpMessageConverter.class)) {
@@ -56,7 +57,8 @@ public class CustomHttpMessageConverterConfigure extends WebMvcConfigurationSupp
                 converters.add(new CustomHttpMessageConverter());
                 break;
             }
-        }
+        }*/
+        converters.add(new CustomHttpMessageConverter());
         log.info("已有的消息转换器{}", converters);
     }
 
