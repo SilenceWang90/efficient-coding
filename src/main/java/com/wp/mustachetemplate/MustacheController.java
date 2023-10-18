@@ -3,6 +3,7 @@ package com.wp.mustachetemplate;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -84,8 +86,15 @@ public class MustacheController {
         Mustache mustache = mustacheFactory.compile("pom.xml.mustache");
 
         // 2、创建填充模板的参数
-        Map<String, String> params = Maps.newHashMap();
-        params.put("", "");
+        MustacheParam params = new MustacheParam();
+        List<Dependency> dependencies = Lists.newArrayList();
+        Dependency dependency1 = new Dependency("org.springframework.boot","spring-boot-starter-web","2.1.17");
+        Dependency dependency2 = new Dependency("com.google.guava","guava","18.0");
+        Dependency dependency3 = new Dependency("org.projectlombok","lombok","0.6.11");
+        dependencies.add(dependency1);
+        dependencies.add(dependency2);
+        dependencies.add(dependency3);
+        params.setDependencies(dependencies);
 
         // 3、指定写入后的输出：可输出成任何类型文件～
         OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/pom.xml");

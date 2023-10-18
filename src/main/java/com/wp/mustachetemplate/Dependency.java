@@ -5,18 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 /**
  * @Description
  * @Author wangpeng
- * @Date 2023/10/18 10:39
+ * @Date 2023/10/18 11:01
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class MustacheParam {
-    private String basePackage;
-    private List<Dependency> dependencies;
+public class Dependency {
+    private String groupId;
+    private String artifactId;
+    private String version;
 }
