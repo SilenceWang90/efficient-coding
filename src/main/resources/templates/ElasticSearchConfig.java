@@ -1,0 +1,104 @@
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.elasticsearch.client.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * @Classname ElasticSearchConfig
+ * @Description ElasticSearch配置类
+ * @Date 2021/8/27 17:34
+ * @Created by wangpeng116
+ */
+@Configuration
+public class ElasticSearchConfig {
+
+    /**
+     * 配置RestHighLevelClient链接
+     *
+     * @return RestHighLevelClient
+     */
+    @Bean
+    public RestHighLevelClient customerRestHighLevelClient() {
+        // 1、配置ElasticSearch服务链接(多个的话即集群模式时放入多个HttpHost对象即可)
+        /*RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost("localhost", 9200, "http"),
+        new HttpHost("localhost", 9201, "http"));*/
+        RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost("localhost", 9200, "http"));
+        // 2、账号密码设置(启动时不会报错，发起请求时会报错)
+        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "wangpeng_elastic"));
+        restClientBuilder
+                // 3、超时配置
+                .setRequestConfigCallback(requestConfigCallback -> {
+                    // 从连接池获取连接的超时时间（单位毫秒）
+                    requestConfigCallback.setConnectionRequestTimeout(500);
+                    // 创建连接超时配置（单位毫秒）
+                    requestConfigCallback.setConnectTimeout(1000);
+                    // 数据传输过程中数据包间隔最大时间（应该可以简单理解为数据读取超时时间）
+                    // 单位毫秒
+                    requestConfigCallback.setSocketTimeout(30000);
+                    return requestConfigCallback;
+                })
+                // 4、并发配置(生产环境的配置需要根据实际业务稽核QPS/TPS进行调整)
+                // 举例场景：此时有400个请求要发起，ES服务器的配置支持maxPerRoute=100，MaxTotal=200，假设接口执行时间为500ms。参考：https://blog.csdn.net/u013905744/article/details/94714696
+                // 分析：由于maxPerRoute=100，所以要分为100,100,100,100分四批来执行，全部执行完成需要2000ms。
+                // 而如果maxPerRoute设置为400，全部执行完需要500ms。在这种情况下（提供并发能力时）就要对这两个参数进行设置了
+                .setHttpClientConfigCallback(httpClientConfigCallback -> {
+                    // 一次并发接受200个http请求同时处理
+                    // 但是注意，即使该值设置很大，但还是会受限于maxConnPerRoute的配置信息，所以两个参数要组合配置
+                    httpClientConfigCallback.setMaxConnTotal(200);
+                    // 每一个服务器能并行接受请求的数量是100个(针对一个域名同时间正在使用的最多的连接数)
+                    // 假设HttpHost设置多个，则是每个HttpHost能同时接收的最大请求数量是100
+                    httpClientConfigCallback.setMaxConnPerRoute(100);
+                    httpClientConfigCallback.setDefaultCredentialsProvider(credentialsProvider);
+                    return httpClientConfigCallback;
+                });
+        return new RestHighLevelClient(restClientBuilder);
+    }
+
+    /**
+     * 配置RequestOptions，用于RestHighLevelClient所有API的操作,RestHighLevelClient的API需要此bean
+     * 如果不需要可以用默认配置：RequestOptions.DEFAULT，该配置缓存大小是100MB
+     *
+     * @return RequestOptions
+     */
+    @Bean
+    public RequestOptions customerRequestOptions() {
+        RequestOptions.Builder builder = RequestOptions.DEFAULT.toBuilder();
+        // 1、增加请求头信息，当请求到nginx等代理服务器需要请求头中增加token验证信息的时候再加入自动的header即可
+        // 不需要配置ContentType
+        // builder.addHeader("Authorization", "Bearer " + TOKEN);
+
+        // 2、自定义返回值返回值堆内存大小，默认单位是B，如下配置是500MB
+        // 如果此次请求中响应信息的大小超过此阈值，请求失败
+        builder.setHttpAsyncResponseConsumerFactory(
+                new HttpAsyncResponseConsumerFactory
+                        .HeapBufferedResponseConsumerFactory(500 * 1024 * 1024));
+        return builder.build();
+    }
+
+
+    /**
+     * 索引异步处理监听器(reindex、update_by_query等设置wait_for_completion为false时的配置)
+     *
+     * @return
+     */
+    @Bean
+    public ActionListener customerActionListener() {
+        ActionListener customerActionListener = new ActionListener() {
+            @Override
+            public void onResponse(Object o) {
+                log.info("处理完成：{}", o);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                log.error("处理失败", e);
+            }
+        };
+        return customerActionListener;
+    }
+}
