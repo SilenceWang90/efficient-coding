@@ -23,10 +23,7 @@ public class InitializerProjectRequestParam {
     // 2、模板名称
     private String mustacheTemplateName;
     // 3、参数信息
-    // 3.1、普通类型参数变量
     private Map<String, Object> params;
-    // 3.2、pom文件dependency信息
-    private List<Dependency> dependencies;
     // 4、文件输出地址
     private String outputUri;
 }
