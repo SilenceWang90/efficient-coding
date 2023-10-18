@@ -131,7 +131,7 @@ public class MustacheController {
             Map<String, Object> params = template.getParams();
             // 1.3、指定写入后的输出：地址以及文件类型。
             // 其中application.properties文件是追加的方式写入
-            OutputStreamWriter fileWriter = new FileWriter(template.getOutputUri(), true);
+            OutputStreamWriter fileWriter = new FileWriter(template.getOutputUri());
             // 1.4、执行写入
             mustache.execute(fileWriter, params);
             fileWriter.flush();
