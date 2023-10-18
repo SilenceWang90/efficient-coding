@@ -52,8 +52,12 @@ public class MustacheController {
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
 
         // 2、创建填充模板的参数
-        Map<String, String> params = Maps.newHashMap();
-        params.put("basePackage", "com.wp");
+        // 2.1、map的方式
+        /*Map<String, String> params = Maps.newHashMap();
+        params.put("basePackage", "com.wp");*/
+        // 2.2、对象的方式
+        MustacheParam params = new MustacheParam();
+        params.setBasePackage("com.wp");
 
         // 3、指定写入后的输出
         OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/TestMustacheController.java");
