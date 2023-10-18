@@ -46,13 +46,24 @@ public class MustacheController {
      */
     @GetMapping("/createFile")
     public void createFile() throws IOException {
+        // 1、创建读取.mustache模板的工厂类，并生成mustache工具对象
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         Mustache mustache = mustacheFactory.compile("TestMustacheController.java.mustache");
 
+        // 2、创建填充模板的参数
         Map<String,String> params = Maps.newHashMap();
         params.put("basePackage","com.wp");
+
+        // 3、指定写入后的输出
         OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/TestMustacheController.java");
 
+        // 4、执行写入
         mustache.execute(fileWriter,params);
     }
+
+    /**
+     * for循环写文件
+     * 场景：pom文件添加<dependency>
+     */
+
 }
