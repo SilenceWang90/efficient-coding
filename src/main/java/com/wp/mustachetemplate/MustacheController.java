@@ -96,7 +96,7 @@ public class MustacheController {
         dependencies.add(dependency3);
         params.setDependencies(dependencies);
         // 同if-else标签的操作
-        params.setCondition(true);
+        params.setCondition(false);
 
         // 3、指定写入后的输出：可输出成任何类型文件～
         OutputStreamWriter fileWriter = new FileWriter("/Users/mlamp/Desktop/pom.xml");
