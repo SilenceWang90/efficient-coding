@@ -422,7 +422,6 @@ public class FileController {
         } catch (Exception e) {
             log.error("打包下载异常：", e);
         }
-
     }
 
     /**
@@ -454,7 +453,7 @@ public class FileController {
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
         ) {
-
+            compress(sourceFolderPath, new File(sourceFolderPath), zipOutputStream);
         }
 
     }
@@ -463,15 +462,17 @@ public class FileController {
      * 对文件夹打包的核心逻辑
      *
      * @param parentFolderPath 父级目录
-     * @param folder           当前
+     * @param currentFile      当前的目录或文件
      * @param zipOutputStream  输出流，用于打包
      */
-    private void compress(String parentFolderPath, File folder, ZipOutputStream zipOutputStream) {
+    private void compress(String parentFolderPath, File currentFile, ZipOutputStream zipOutputStream) {
         /** 遍历当前目录下的所有文件以及文件夹，进行打包处理 */
-        for (File file : folder.listFiles()) {
+        for (File file : currentFile.listFiles()) {
             if (file.isDirectory()) {
                 // 1、file是文件夹
-
+                file.getName();
+                file.getAbsolutePath();
+                file.getPath();
             } else {
                 // 2、file是文件
 
