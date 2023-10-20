@@ -425,8 +425,9 @@ public class FileController {
     }
 
     /**
-     * 打包下载(zip包)，对目录下载
+     * 打包下载(zip包)，兼容对目录的下载
      * 在对文件下载的基础上使用递归找到目录下的所有文件并压缩打包
+     * 参考：https://blog.csdn.net/qq_42582773/article/details/121755411
      *
      * @param sourceFolderPath 请求参数：主要为要打包的目标源文件的目录
      * @param response         zip文件返回
@@ -434,11 +435,6 @@ public class FileController {
     @GetMapping("/batchDownloadPath")
     public void batchDownloadPath(@RequestParam("sourceFolderPath") String sourceFolderPath
             , HttpServletResponse response) throws IOException {
-        /*https://blog.51cto.com/u_16175485/6831282
-        https://blog.csdn.net/m0_59680416/article/details/131108395
-
-        https://blog.csdn.net/qq_42582773/article/details/121755411
-        */
         /** 文件输出定义*/
         String zipFileName = "脚手架工程.zip";
         response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
