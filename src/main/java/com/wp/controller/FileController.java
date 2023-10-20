@@ -467,38 +467,42 @@ public class FileController {
      * @param zipOutputStream  输出流，用于打包
      */
     private void compress(String parentFolderPath, File currentFile, ZipOutputStream zipOutputStream) throws IOException {
-        /** 遍历当前目录下的所有文件以及文件夹，进行打包处理 */
-        File[] files = currentFile.listFiles();
-        if (files == null || files.length == 0) {
-            /** 1、当前目录为空**/
-            // 当前目录为空：创建该目录即可(空目录)
-            // todo：尝试注释此代码验证是否空目录的确不会被打包
-            zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\" + currentFile.getName()));
+        if (currentFile.isFile()) {
+            /** currentFile是文件**/
+            // file是文件
+            ZipEntry zipEntry = new ZipEntry(parentFolderPath + "\\" + currentFile.getName());
+            zipOutputStream.putNextEntry(zipEntry);
+            try (
+                    InputStream inputStream = new FileInputStream(currentFile);
+            ) {
+                // 缓冲区
+                byte[] buffer = new byte[1024];
+                // 读取文件流长度
+                int len;
+                // 读取到的文件内容没有结束，则写入输出流中
+                while ((len = inputStream.read(buffer)) > 0) {
+                    // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
+                    // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
+                    zipOutputStream.write(buffer, 0, len);
+                }
+            } catch (Exception exception) {
+                log.error("文件读取流异常：", exception);
+            }
         } else {
-            /** 2、当前目录不为空**/
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    // 1、file是文件夹：递归处理
-                    compress(parentFolderPath + currentFile.getName() + "\\", currentFile, zipOutputStream);
-                } else {
-                    // 2、file是文件
-                    ZipEntry zipEntry = new ZipEntry(parentFolderPath + "\\" + file.getName());
-                    zipOutputStream.putNextEntry(zipEntry);
-                    try (
-                            InputStream inputStream = new FileInputStream(file);
-                    ) {
-                        // 缓冲区
-                        byte[] buffer = new byte[1024];
-                        // 读取文件流长度
-                        int len;
-                        // 读取到的文件内容没有结束，则写入输出流中
-                        while ((len = inputStream.read(buffer)) > 0) {
-                            // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
-                            // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
-                            zipOutputStream.write(buffer, 0, len);
-                        }
-                    } catch (Exception exception) {
-                        log.error("文件读取流异常：", exception);
+            /** currentFile是目录**/
+            /** 遍历当前目录下的所有文件以及文件夹，进行打包处理 */
+            File[] files = currentFile.listFiles();
+            if (files == null || files.length == 0) {
+                /** 1、当前目录为空**/
+                // 当前目录为空：创建该目录即可(空目录)
+                // todo：尝试注释此代码验证是否空目录的确不会被打包
+                zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\" + currentFile.getName()));
+            } else {
+                /** 2、当前目录不为空**/
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        // 1、file是文件夹：递归处理
+                        compress(parentFolderPath + currentFile.getName() + "\\", currentFile, zipOutputStream);
                     }
                 }
             }
