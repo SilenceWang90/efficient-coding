@@ -429,12 +429,55 @@ public class FileController {
      * 打包下载(zip包)，对目录下载
      * 在对文件下载的基础上使用递归找到目录下的所有文件并压缩打包
      *
-     * @param response zip文件返回
+     * @param sourceFolderPath 要打包的目标源文件的目录
+     * @param response         zip文件返回
      */
     @RequestMapping("/batchDownloadPath")
-    public void batchDownloadPath(HttpServletResponse response) throws IOException {
+    public void batchDownloadPath(String sourceFolderPath, HttpServletResponse response) throws IOException {
         /*https://blog.51cto.com/u_16175485/6831282
-        https://blog.csdn.net/m0_59680416/article/details/131108395*/
+        https://blog.csdn.net/m0_59680416/article/details/131108395
+
+        https://blog.csdn.net/qq_42582773/article/details/121755411
+        */
+        /** 文件输出定义*/
+        String zipFileName = "脚手架工程.zip";
+        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
+        response.setContentType("application/octet-stream;charset=UTF-8");
+
+        try (
+                /** 2、得到ZipOutputStream用于生成zip文件*/
+                // 将文件输出到指定位置还是直接输出到response的输出流根据业务需要决定选择即可～
+                /*// 最终的压缩文件输出到指定目录
+                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/wangpeng/temp/压缩包文件.zip");*/
+                // 最终的压缩文件输出到resonse输出流
+                OutputStream outputStream = response.getOutputStream();
+                // 获得zip输出流
+                ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
+        ) {
+
+        }
+
+    }
+
+    /**
+     * 对文件夹打包的核心逻辑
+     *
+     * @param parentFolderPath 父级目录
+     * @param folder           当前
+     * @param zipOutputStream  输出流，用于打包
+     */
+    private void compress(String parentFolderPath, File folder, ZipOutputStream zipOutputStream) {
+        /** 遍历当前目录下的所有文件以及文件夹，进行打包处理 */
+        for (File file : folder.listFiles()) {
+            if (file.isDirectory()) {
+                // 1、file是文件夹
+
+            } else {
+                // 2、file是文件
+
+            }
+
+        }
     }
 
 }
