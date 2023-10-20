@@ -454,6 +454,8 @@ public class FileController {
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
         ) {
             compress(sourceFolderPath, new File(sourceFolderPath), zipOutputStream);
+        } catch (Exception exception) {
+            log.error("打包下载异常：", exception);
         }
 
     }
@@ -465,20 +467,26 @@ public class FileController {
      * @param currentFile      当前的目录或文件
      * @param zipOutputStream  输出流，用于打包
      */
-    private void compress(String parentFolderPath, File currentFile, ZipOutputStream zipOutputStream) {
+    private void compress(String parentFolderPath, File currentFile, ZipOutputStream zipOutputStream) throws IOException {
         /** 遍历当前目录下的所有文件以及文件夹，进行打包处理 */
-        for (File file : currentFile.listFiles()) {
-            if (file.isDirectory()) {
-                // 1、file是文件夹
-                file.getName();
-                file.getAbsolutePath();
-                file.getPath();
-            } else {
-                // 2、file是文件
+        File[] files = currentFile.listFiles();
+        if (files == null || files.length == 0) {
+            // 当前目录为空：创建该目录
+            // todo：尝试注释此代码验证是否空目录的确不会被打包
+            zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\" + currentFile.getName()));
+        } else {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    // 1、file是文件夹
+
+                } else {
+                    // 2、file是文件
+
+                }
 
             }
-
         }
+
     }
 
 }
