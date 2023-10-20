@@ -482,6 +482,8 @@ public class FileController {
                     compress(parentFolderPath + currentFile.getName() + "\\", currentFile, zipOutputStream);
                 } else {
                     // 2、file是文件
+                    ZipEntry zipEntry = new ZipEntry(parentFolderPath + "\\" + file.getName());
+                    zipOutputStream.putNextEntry(zipEntry);
                     try (
                             InputStream inputStream = new FileInputStream(file);
                     ) {
