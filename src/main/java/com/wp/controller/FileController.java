@@ -500,10 +500,8 @@ public class FileController {
             } else {
                 /** 2、当前目录不为空**/
                 for (File file : files) {
-                    if (file.isDirectory()) {
-                        // 1、file是文件夹：递归处理
-                        compress(parentFolderPath + currentFile.getName() + "\\", currentFile, zipOutputStream);
-                    }
+                    // 递归处理
+                    compress(parentFolderPath + file.getName() + "\\", file, zipOutputStream);
                 }
             }
         }
