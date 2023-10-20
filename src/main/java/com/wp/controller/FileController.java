@@ -470,7 +470,7 @@ public class FileController {
         if (currentFile.isFile()) {
             /** currentFile是文件**/
             // file是文件
-            ZipEntry zipEntry = new ZipEntry(parentFolderPath + "\\" + currentFile.getName());
+            ZipEntry zipEntry = new ZipEntry(parentFolderPath);
             zipOutputStream.putNextEntry(zipEntry);
             try (
                     InputStream inputStream = new FileInputStream(currentFile);
@@ -501,7 +501,7 @@ public class FileController {
                 /** 2、当前目录不为空**/
                 for (File file : files) {
                     // 递归处理
-                    compress(parentFolderPath + file.getName() + "\\", file, zipOutputStream);
+                    compress(parentFolderPath + "\\" + file.getName(), file, zipOutputStream);
                 }
             }
         }
