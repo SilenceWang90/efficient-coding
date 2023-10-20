@@ -496,7 +496,7 @@ public class FileController {
                 /** 1、当前目录为空**/
                 // 当前目录为空：创建该目录即可(空目录)
                 // todo：尝试注释此代码验证是否空目录的确不会被打包
-                zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\" + currentFile.getName()));
+                zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\"));
             } else {
                 /** 2、当前目录不为空**/
                 for (File file : files) {
