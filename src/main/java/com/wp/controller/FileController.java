@@ -2,7 +2,6 @@ package com.wp.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.wp.dto.BatchDownloadPathRequestParam;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -17,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.net.URLEncoder;
@@ -430,11 +428,11 @@ public class FileController {
      * 打包下载(zip包)，对目录下载
      * 在对文件下载的基础上使用递归找到目录下的所有文件并压缩打包
      *
-     * @param requestParam 请求参数：主要为要打包的目标源文件的目录
-     * @param response     zip文件返回
+     * @param sourceFolderPath 请求参数：主要为要打包的目标源文件的目录
+     * @param response         zip文件返回
      */
-    @PostMapping("/batchDownloadPath")
-    public void batchDownloadPath(@RequestBody @Valid BatchDownloadPathRequestParam requestParam
+    @GetMapping("/batchDownloadPath")
+    public void batchDownloadPath(@RequestParam("sourceFolderPath") String sourceFolderPath
             , HttpServletResponse response) throws IOException {
         /*https://blog.51cto.com/u_16175485/6831282
         https://blog.csdn.net/m0_59680416/article/details/131108395
@@ -455,7 +453,7 @@ public class FileController {
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
         ) {
-            compress("", new File(requestParam.getSourceFolderPath()), zipOutputStream);
+            compress("", new File(sourceFolderPath), zipOutputStream);
         } catch (Exception exception) {
             log.error("打包下载异常：", exception);
         }
