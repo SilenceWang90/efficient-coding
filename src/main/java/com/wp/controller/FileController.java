@@ -431,8 +431,8 @@ public class FileController {
      * @param sourceFolderPath 要打包的目标源文件的目录
      * @param response         zip文件返回
      */
-    @RequestMapping("/batchDownloadPath")
-    public void batchDownloadPath(String sourceFolderPath, HttpServletResponse response) throws IOException {
+    @GetMapping("/batchDownloadPath/{sourceFolderPath}")
+    public void batchDownloadPath(@PathVariable("sourceFolderPath") String sourceFolderPath, HttpServletResponse response) throws IOException {
         /*https://blog.51cto.com/u_16175485/6831282
         https://blog.csdn.net/m0_59680416/article/details/131108395
 
