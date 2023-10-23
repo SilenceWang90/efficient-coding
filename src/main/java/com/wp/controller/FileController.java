@@ -449,6 +449,8 @@ public class FileController {
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
         ) {
+            // 如果需要创建统一根目录，在此处传入根目录路径即可，如下图，将sourceFolderPath中的内容都打包到parentFolder\wp-initializer-folder\目录下
+            /*compress("parentFolder\\wp-initializer-folder\\", new File(sourceFolderPath), zipOutputStream);*/
             compress("", new File(sourceFolderPath), zipOutputStream);
         } catch (Exception exception) {
             log.error("打包下载异常：", exception);
@@ -458,7 +460,7 @@ public class FileController {
     /**
      * 对文件夹打包的核心逻辑
      *
-     * @param parentFolderPath 父级目录(当前文件或文件夹所属目录)
+     * @param parentFolderPath 父级目录(当前文件或文件夹所属目录)。打包时，当前文件夹或文件(currentFile)所在的目录。
      * @param currentFile      当前的目录或文件
      * @param zipOutputStream  输出流，用于打包
      */
