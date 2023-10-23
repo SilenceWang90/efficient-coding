@@ -5,8 +5,10 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wp.feignapi.FileServiceApi;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.FileWriter;
@@ -24,6 +26,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/mustache")
 public class MustacheController {
+    @Resource
+    private FileServiceApi fileServiceApi;
+
     @GetMapping("/demo")
     public void demo() throws IOException {
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
@@ -139,11 +144,8 @@ public class MustacheController {
             fileWriter.close();
         }
         /**
-         * 2、todo：打zip包，需要递归目录进行打包操作～待验证
+         * 2、打zip包，需要递归目录进行打包操作～
          */
-
-
-
+        fileServiceApi.batchDownloadPath("/Users/mlamp/Desktop/target/wp-initializer", response);
     }
-
 }

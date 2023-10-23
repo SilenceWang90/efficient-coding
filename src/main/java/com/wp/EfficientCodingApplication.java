@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @Classname EfficientCoding
@@ -11,6 +12,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
  * @Date 2021/1/5 13:47
  * @Created by wangpeng116
  */
+@EnableFeignClients
 @SpringBootApplication
 //扫秒自定义的filter
 @ServletComponentScan
