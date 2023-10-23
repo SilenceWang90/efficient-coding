@@ -23,8 +23,8 @@ public class InitializerProjectRequestParam {
     private String mustacheTemplateName;
     // 3、参数信息
     private Map<String, Object> params;
-    // 4、文件所在目录
+    // 4、文件所在目录(绝对路径)
     private String directoryPath;
-    // 5、文件绝对路径
+    // 5、文件绝对路径(绝对路径)
     private String filePath;
 }
