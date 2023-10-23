@@ -458,7 +458,7 @@ public class FileController {
     /**
      * 对文件夹打包的核心逻辑
      *
-     * @param parentFolderPath 父级目录
+     * @param parentFolderPath 父级目录(当前文件或文件夹所属目录)
      * @param currentFile      当前的目录或文件
      * @param zipOutputStream  输出流，用于打包
      */
