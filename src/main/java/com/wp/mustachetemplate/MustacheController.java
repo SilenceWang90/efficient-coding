@@ -6,6 +6,7 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wp.feign.feignapi.FileServiceApi;
+import com.wp.feign.feignapi.TestServerApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,8 @@ import java.util.zip.ZipOutputStream;
 public class MustacheController {
     @Resource
     private FileServiceApi fileServiceApi;
+    @Resource
+    private TestServerApi testServerApi;
 
     @GetMapping("/demo")
     public void demo() throws IOException {
