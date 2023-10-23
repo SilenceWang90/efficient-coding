@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -158,23 +159,23 @@ public class MustacheController {
          * 2、打zip包，需要递归目录进行打包操作～
          */
         /** 文件输出定义*/
-//        String zipFileName = "脚手架工程.zip";
-//        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
-//        response.setContentType("application/octet-stream;charset=UTF-8");
-//        try (
-//                /** 2、得到ZipOutputStream用于生成zip文件*/
-//                // 将文件输出到指定位置还是直接输出到response的输出流根据业务需要决定选择即可～
-//                // 最终的压缩文件输出到指定目录
-//                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/Desktop/wp-initialiazer.zip");
-//                // 最终的压缩文件输出到resonse输出流
-////                OutputStream outputStream = response.getOutputStream();
-//                // 获得zip输出流
-//                ZipOutputStream zipOutputStream = new ZipOutputStream(zipFileOutputStream)
-//        ) {
-//            compress("", new File(sourceFolderPath), zipOutputStream);
-//        } catch (Exception exception) {
-//            log.error("打包下载异常：", exception);
-//        }
+        String zipFileName = "脚手架工程.zip";
+        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        try (
+                /** 2、得到ZipOutputStream用于生成zip文件*/
+                // 将文件输出到指定位置还是直接输出到response的输出流根据业务需要决定选择即可～
+                // 最终的压缩文件输出到指定目录
+                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/Desktop/wp-initialiazer.zip");
+                // 最终的压缩文件输出到resonse输出流
+                // OutputStream outputStream = response.getOutputStream();
+                // 获得zip输出流
+                ZipOutputStream zipOutputStream = new ZipOutputStream(zipFileOutputStream)
+        ) {
+            compress("", new File(sourceFolderPath), zipOutputStream);
+        } catch (Exception exception) {
+            log.error("打包下载异常：", exception);
+        }
     }
 
     /**
