@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @Date 2021/1/5 13:47
  * @Created by wangpeng116
  */
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.wp.feign.feignapi")
 @SpringBootApplication
 //扫秒自定义的filter
 @ServletComponentScan

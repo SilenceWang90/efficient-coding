@@ -5,7 +5,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.wp.feignapi.FileServiceApi;
+import com.wp.feign.feignapi.FileServiceApi;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
