@@ -6,23 +6,25 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wp.feign.feignapi.FileServiceApi;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @Description
  * @Author wangpeng
  * @Date 2023/10/17 17:25
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/mustache")
 public class MustacheController {
@@ -121,7 +123,8 @@ public class MustacheController {
      * @param response      响应信息，打包下载
      */
     @PostMapping("/mockRealInitializerProject")
-    public void mockRealInitializerProject(@RequestBody @Valid List<InitializerProjectRequestParam> initialParams
+    public void mockRealInitializerProject(@RequestParam("sourceFolderPath") String sourceFolderPath
+            , @RequestBody @Valid List<InitializerProjectRequestParam> initialParams
             , HttpServletResponse response) throws IOException {
         // 创建读取.mustache模板的工厂类，并生成mustache工具对象。
         MustacheFactory mustacheFactory = new DefaultMustacheFactory("templates");
@@ -146,6 +149,70 @@ public class MustacheController {
         /**
          * 2、打zip包，需要递归目录进行打包操作～
          */
-        fileServiceApi.batchDownloadPath("/Users/mlamp/Desktop/target/wp-initializer", response);
+        /** 文件输出定义*/
+        String zipFileName = "脚手架工程.zip";
+        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        try (
+                /** 2、得到ZipOutputStream用于生成zip文件*/
+                // 将文件输出到指定位置还是直接输出到response的输出流根据业务需要决定选择即可～
+                // 最终的压缩文件输出到指定目录
+                OutputStream zipFileOutputStream = new FileOutputStream("/Users/mlamp/Desktop/wp-initialiazer.zip");
+                // 最终的压缩文件输出到resonse输出流
+//                OutputStream outputStream = response.getOutputStream();
+                // 获得zip输出流
+                ZipOutputStream zipOutputStream = new ZipOutputStream(zipFileOutputStream)
+        ) {
+            compress("", new File(sourceFolderPath), zipOutputStream);
+        } catch (Exception exception) {
+            log.error("打包下载异常：", exception);
+        }
+    }
+
+    /**
+     * 对文件夹打包的核心逻辑
+     *
+     * @param parentFolderPath 父级目录
+     * @param currentFile      当前的目录或文件
+     * @param zipOutputStream  输出流，用于打包
+     */
+    private void compress(String parentFolderPath, File currentFile, ZipOutputStream zipOutputStream) throws IOException {
+        if (currentFile.isFile()) {
+            /** currentFile是文件**/
+            // file是文件
+            ZipEntry zipEntry = new ZipEntry(parentFolderPath);
+            zipOutputStream.putNextEntry(zipEntry);
+            try (
+                    InputStream inputStream = new FileInputStream(currentFile);
+            ) {
+                // 缓冲区
+                byte[] buffer = new byte[1024];
+                // 读取文件流长度
+                int len;
+                // 读取到的文件内容没有结束，则写入输出流中
+                while ((len = inputStream.read(buffer)) > 0) {
+                    // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
+                    // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
+                    zipOutputStream.write(buffer, 0, len);
+                }
+            } catch (Exception exception) {
+                log.error("文件读取流异常：", exception);
+            }
+        } else {
+            /** currentFile是目录**/
+            /** 遍历当前目录下的所有文件以及文件夹，进行打包处理 */
+            File[] files = currentFile.listFiles();
+            if (files == null || files.length == 0) {
+                /** 1、当前目录为空**/
+                // 当前目录为空：创建该目录即可(空目录)。如果要舍弃空目录则注释该行代码即可
+                zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\"));
+            } else {
+                /** 2、当前目录不为空**/
+                for (File file : files) {
+                    // 递归处理
+                    compress(parentFolderPath + "\\" + file.getName(), file, zipOutputStream);
+                }
+            }
+        }
     }
 }
