@@ -126,8 +126,7 @@ public class MustacheController {
      * @param response      响应信息，打包下载
      */
     @PostMapping("/mockRealInitializerProject")
-    public void mockRealInitializerProject(@RequestParam("sourceFolderPath") String sourceFolderPath
-            , @RequestBody @Valid List<InitializerProjectRequestParam> initialParams
+    public void mockRealInitializerProject(@RequestBody @Valid InitializerProjectRequestParam initialParams
             , HttpServletResponse response) throws IOException {
         // 创建读取.mustache模板的工厂类，并生成mustache工具对象。
         MustacheFactory mustacheFactory = new DefaultMustacheFactory("templates");
@@ -135,7 +134,7 @@ public class MustacheController {
         /**
          * 1、遍历参数，逐个生成文件
          */
-        for (InitializerProjectRequestParam template : initialParams) {
+        for (MustacheTemplateParams template : initialParams.getTemplateParams()) {
             // 1.1、获取模板
             mustache = mustacheFactory.compile(template.getMustacheTemplateName());
             // 1.2、获取模板参数
@@ -172,7 +171,7 @@ public class MustacheController {
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(zipFileOutputStream)
         ) {
-            compress("", new File(sourceFolderPath), zipOutputStream);
+            compress("", new File(initialParams.getSourceFolderPath()), zipOutputStream);
         } catch (Exception exception) {
             log.error("打包下载异常：", exception);
         }
