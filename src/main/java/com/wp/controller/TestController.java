@@ -38,6 +38,7 @@ public class TestController {
     @Resource
     private GeneralTemplateParamsConfig generalTemplateParamsConfig;
 
+
     @GetMapping("/getLinkObjectDtoInfo")
     public LinkObjectDto getLinkObjectDtoInfo() {
         LinkObjectDto head = new LinkObjectDto();
