@@ -2,8 +2,7 @@ package com.wp.controller;
 
 import com.wp.dto.LinkObjectDto;
 import com.wp.dto.UserFillData;
-import com.wp.mustachetemplate.GeneralTemplateParamsConfig;
-import com.wp.mustachetemplate.MustacheTemplateParams;
+import com.wp.mustachetemplate.params.*;
 import com.wp.service.RetryableService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,6 @@ public class TestController {
     private RetryableService retryableService;
     @Autowired
     private List<HttpMessageConverter> converters;
-
-    @Resource
-    private GeneralTemplateParamsConfig generalTemplateParamsConfig;
 
     @GetMapping("/getLinkObjectDtoInfo")
     public LinkObjectDto getLinkObjectDtoInfo() {
@@ -131,13 +127,28 @@ public class TestController {
         log.info("所有消息转换器：{}", converters);
     }
 
+    @Resource
+    private ElasticSearchConfigParams elasticSearchConfigParams;
+    @Resource
+    private ApplicationPropertiesParams applicationPropertiesParams;
+    @Resource
+    private PomParams pomParams;
+    @Resource
+    private CollectWholeParams collectWholeParams;
+
     /**
      * 获取application.yml中的全部配置信息
+     *
      * @return
      */
     @GetMapping("/getParams")
-    public List<MustacheTemplateParams> getParams() {
-        return generalTemplateParamsConfig.getTemplateParams();
+    public List<BaseConfigParams> getParams() {
+//        List<BaseConfigParams> result = Lists.newArrayList();
+//        result.add(elasticSearchConfigParams);
+//        result.add(applicationPropertiesParams);
+//        result.add(pomParams);
+        return collectWholeParams.getBaseConfigParamsList();
     }
+
 
 }

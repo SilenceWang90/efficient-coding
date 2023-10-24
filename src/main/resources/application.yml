@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: scaffold-project
+
+elastic-search-config:
+  componentType: ElasticSearchConfig
+  mustacheTemplateName: ElasticSearchConfig.java.mustache
+  # es模板渲染参数信息
+  basePackage:
+    - com.wp
+    - com.yml
+  directoryPath: /Users/mlamp/Desktop/target/wp-initializer/src/main/java/com/wp/config
+  filePath: /Users/mlamp/Desktop/target/wp-initializer/src/main/java/com/wp/config/ElasticSearchConfig.java
+  # ApplicationProperties模板
+application-properties:
+  componentType: ApplicationProperties
+  mustacheTemplateName: application.properties.mustache
+  # application.properties模板渲染参数信息
+  elastic_host: localhost
+  elastic_port: 9200
+  elastic_protocol: http
+  directoryPath: /Users/mlamp/Desktop/target/wp-initializer/src/main/resources
+  filePath: /Users/mlamp/Desktop/target/wp-initializer/src/main/resources/application.properties
+pom:
+  componentType: pom
+  mustacheTemplateName: pom.xml.mustache
+  # pom.xml模板渲染参数信息
+  dependencies:
+    - groupId: org.springframework.boot
+      artifactId: spring-boot-starter-web
+      version: 2.1.17
+    - groupId: com.google.guava
+      artifactId: guava
+      version: 18.0
+    - groupId: org.projectlombok
+      artifactId: lombok
+      version: 0.6.11
+  directoryPath: /Users/mlamp/Desktop/target/wp-initializer
+  filePath: /Users/mlamp/Desktop/target/wp-initializer/pom.xml
