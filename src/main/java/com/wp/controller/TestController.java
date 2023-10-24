@@ -2,6 +2,8 @@ package com.wp.controller;
 
 import com.wp.dto.LinkObjectDto;
 import com.wp.dto.UserFillData;
+import com.wp.mustachetemplate.GeneralTemplateParamsConfig;
+import com.wp.mustachetemplate.MustacheTemplateParams;
 import com.wp.service.RetryableService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class TestController {
     private RetryableService retryableService;
     @Autowired
     private List<HttpMessageConverter> converters;
+
+    @Resource
+    private GeneralTemplateParamsConfig generalTemplateParamsConfig;
 
     @GetMapping("/getLinkObjectDtoInfo")
     public LinkObjectDto getLinkObjectDtoInfo() {
@@ -82,7 +87,7 @@ public class TestController {
     }
 
     @GetMapping("/test2")
-    public void test2(){
+    public void test2() {
         System.out.println(fib(1));
         System.out.println(fib(2));
         System.out.println(fib(3));
@@ -101,19 +106,19 @@ public class TestController {
     }
 
     @GetMapping("/testRetry")
-    public String testRetry(){
+    public String testRetry() {
         String result = retryableService.testRetry("成功");
         return result;
     }
 
     @GetMapping("/testRetryRecover")
-    public String testRetryRecover(){
+    public String testRetryRecover() {
         retryableService.testRecover("成功");
         return "成功";
     }
 
     @GetMapping("/getUserFillData")
-    public UserFillData getUserFillData(@RequestBody UserFillData userFillData){
+    public UserFillData getUserFillData(@RequestBody UserFillData userFillData) {
         UserFillData userFillData1 = new UserFillData();
         userFillData1.setUserId(21321424L);
         userFillData1.setUserName("wangpeng");
@@ -124,6 +129,15 @@ public class TestController {
     @GetMapping("/test1")
     public void test1() {
         log.info("所有消息转换器：{}", converters);
+    }
+
+    /**
+     * 获取application.yml中的全部配置信息
+     * @return
+     */
+    @GetMapping("/getParams")
+    public List<MustacheTemplateParams> getParams() {
+        return generalTemplateParamsConfig.getTemplateParams();
     }
 
 }
