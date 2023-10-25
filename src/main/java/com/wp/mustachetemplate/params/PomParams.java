@@ -16,5 +16,6 @@ import java.util.Map;
 @Data
 @ConfigurationProperties(prefix = "pom")
 public class PomParams extends BaseConfigParams{
+    // todo：可优化，增加version版本选择以及plugins等配置内容。创建denpendecy对象即可～version为集合，其他属性等确认后再做添加，和applicaiton.yml同步修改
     List<Map<String,String>> dependencies;
 }
