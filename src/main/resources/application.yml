@@ -1,7 +1,9 @@
 spring:
   application:
     name: scaffold-project
+individual-name: wp-main-name
 
+# mustache模板需要渲染的内容
 elastic-search-config:
   componentType: ElasticSearchConfig
   mustacheTemplateName: ElasticSearchConfig.java.mustache
