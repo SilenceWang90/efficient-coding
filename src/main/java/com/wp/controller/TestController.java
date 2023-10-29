@@ -1,11 +1,14 @@
 package com.wp.controller;
 
+import com.wp.config.CustomlizedProperties;
+import com.wp.config.PropertyConfiguration;
 import com.wp.dto.LinkObjectDto;
 import com.wp.dto.UserFillData;
 import com.wp.mustachetemplate.params.*;
 import com.wp.service.RetryableService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -148,6 +151,29 @@ public class TestController {
 //        result.add(applicationPropertiesParams);
 //        result.add(pomParams);
         return collectWholeParams.getBaseConfigParamsList();
+    }
+
+    @Resource
+    private PropertyConfiguration propertyConfiguration;
+    @Resource
+    private CustomlizedProperties customlizedProperties;
+
+//    @Value("${sdk.api-key}")
+//    private String apiKey;
+//
+//    @Value("${sdk.api-endpoint}")
+//    private String endpoint;
+
+    @Value("${individual-name}")
+    private String individualName;
+
+    @GetMapping("/testPropertyConfiguration")
+    public void getPropertyConfiguration() {
+//        System.out.println(apiKey);
+//        System.out.println(endpoint);
+        System.out.println(individualName);
+//        System.out.println(propertyConfiguration);
+//        System.out.println(customlizedProperties);
     }
 
 
