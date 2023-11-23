@@ -3,6 +3,7 @@ package com.wp.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wp.service.FileService;
+import com.wp.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -502,6 +503,17 @@ public class FileController {
                 }
             }
         }
+    }
+
+    /**
+     * 删除文件或目录
+     *
+     * @param path 文件路径或目录路径，如果是目录则递归删除子文件夹和其中的文件
+     * @throws IOException
+     */
+    @GetMapping("/removeFileOrDirectory")
+    public void removeFileOrDirectory(String path) throws IOException {
+        FileUtil.removeFile(path);
     }
 }
 
