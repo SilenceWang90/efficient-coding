@@ -12,4 +12,6 @@ public class Father {
     private String id;
     private Integer age;
     private Boolean exist;
+    private String newName;
+    private String newAddress;
 }

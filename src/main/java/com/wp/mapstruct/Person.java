@@ -12,4 +12,6 @@ public class Person {
     private String id;
     private Integer age;
     private Boolean exist;
+    private String name;
+    private String address;
 }

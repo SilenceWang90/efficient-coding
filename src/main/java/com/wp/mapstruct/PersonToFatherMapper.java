@@ -1,7 +1,10 @@
 package com.wp.mapstruct;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+
+import java.util.List;
 
 /**
  * @Description
@@ -23,4 +26,10 @@ public interface PersonToFatherMapper {
     // 不声明则按照属性名称相同的进行赋值处理
     @Mappings(value = {})
     Father personToFather(Person person);
+
+    @Mappings(value = {
+            @Mapping(source = "name", target = "newName"),
+            @Mapping(source = "address", target = "newAddress"),
+    })
+    List<Father> personListToFatherList(List<Person> person);
 }
