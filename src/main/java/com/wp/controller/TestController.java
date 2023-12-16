@@ -1,7 +1,7 @@
 package com.wp.controller;
 
-import com.wp.config.CustomlizedProperties;
-import com.wp.config.PropertyConfiguration;
+//import com.wp.config.CustomlizedProperties;
+//import com.wp.config.PropertyConfiguration;
 import com.wp.dto.LinkObjectDto;
 import com.wp.dto.UserFillData;
 import com.wp.mustachetemplate.params.*;
@@ -152,11 +152,11 @@ public class TestController {
 //        result.add(pomParams);
         return collectWholeParams.getBaseConfigParamsList();
     }
-
-    @Resource
-    private PropertyConfiguration propertyConfiguration;
-    @Resource
-    private CustomlizedProperties customlizedProperties;
+//
+//    @Resource
+//    private PropertyConfiguration propertyConfiguration;
+//    @Resource
+//    private CustomlizedProperties customlizedProperties;
 
 //    @Value("${sdk.api-key}")
 //    private String apiKey;
