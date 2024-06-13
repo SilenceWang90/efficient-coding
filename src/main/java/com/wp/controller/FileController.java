@@ -51,16 +51,16 @@ public class FileController {
     /**
      * 文件上传
      *
-     * @param file
+     * @param myfile 不写请求参数注解也可以，类似使用@RequestParam注解的方式，MultipartFile对象的名称要和请求参数中的file组件的参数对应即可
      * @return
      */
     @PostMapping("/upload")
-    public String upload(@NotNull MultipartFile file) {
+    public String upload(@RequestParam("myfile") MultipartFile myfile,@RequestParam("wpName") String wpName) {
         //文件上传...
         try {
-            fileService.upload(file.getInputStream(), file.getOriginalFilename());
+            fileService.upload(myfile.getInputStream(), myfile.getOriginalFilename());
         } catch (IOException e) {
-            log.error("文件上传失败，文件名称：{}，异常信息：{}", file.getOriginalFilename(), e);
+            log.error("文件上传失败，文件名称：{}，异常信息：{}", myfile.getOriginalFilename(), e);
         }
         return "上传成功";
     }

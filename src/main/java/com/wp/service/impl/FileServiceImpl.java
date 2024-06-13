@@ -45,11 +45,12 @@ public class FileServiceImpl implements FileService {
      * 存储空间
      */
     private static final String BUCKET = "C:\\Users\\wangpeng116\\Desktop";
+    private static final String BUCKET_MAC = "/Users/manman/Desktop";
 
     @Override
     public void upload(InputStream inputStream, String filename) {
         // 拼接文件存储路径
-        String storagePath = BUCKET + "/" + filename;
+        String storagePath = BUCKET_MAC + "/" + filename;
         try (
                 // JDK8 TWR不能关闭外部资源，因此定义内部流来实现对外部流的关闭
                 InputStream innerInputStream = inputStream;
