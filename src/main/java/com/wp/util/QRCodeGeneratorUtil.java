@@ -68,10 +68,14 @@ public class QRCodeGeneratorUtil {
      * @throws NotFoundException
      */
     public static String readQRCodeImg(InputStream qrcodeInputStream) throws IOException, NotFoundException {
+        // 通过BufferedImage读取输入流文件，便于后续的解码
         BufferedImage bufferedImage = ImageIO.read(qrcodeInputStream);
+        // 将BufferedImage转成BinaryBitmap，解码的方法需要解析BufferedImage
         BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(bufferedImage)));
+        // 解码参数，如中文编码设置
         Map<DecodeHintType, Object> hints = Maps.newHashMap();
         hints.put(DecodeHintType.CHARACTER_SET, StandardCharsets.UTF_8);
+        // 解码，解码后的对象为Result，text属性中存储着二维码存储的信息
         Result result = new MultiFormatReader().decode(binaryBitmap, hints);
         return result.getText();
     }
