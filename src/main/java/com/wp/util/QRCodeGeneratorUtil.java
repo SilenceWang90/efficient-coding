@@ -6,6 +6,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -40,9 +41,12 @@ public class QRCodeGeneratorUtil {
     public static String generateQRCodeImage(String text, int width, int height) throws WriterException, IOException {
         /**1、创建QRCodeWriter，用于生成QRCode二维码**/
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        // 1.1、二维码的属性设置，可以设置文本编码格式为UTF-8用以支持中文
+        // 1.1、二维码的属性设置：如编码格式、纠错等级、二维码的间距等等信息
         Map<EncodeHintType, Object> hints = new HashMap<>();
+        // 设置文本编码格式为UTF-8用以支持中文
         hints.put(EncodeHintType.CHARACTER_SET, StandardCharsets.UTF_8);
+        // 设置纠错等级，纠错等级越高，二维码损坏后依然能识别的能力就越强，相对的，能存储的信息就越少(即text的内容就越少)
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
         // 1.2、创建二维码，将二维码的内容text、长度宽度、设置的属性hints作为配置传入。其中BarcodeFormat为二维码的标准。我们生成QRCode标注的二维码即可
         // BitMatrix就是二维码的黑白矩阵信息
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hints);
