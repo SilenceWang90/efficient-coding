@@ -1,20 +1,21 @@
 package com.wp.util;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
+import com.google.common.collect.Maps;
+import com.google.zxing.*;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,16 +54,25 @@ public class QRCodeGeneratorUtil {
         /** 2、生成二维码图片信息 **/
         // 2.1、将二维码信息创建为二维码图像对象(注意bufferedImage并非最终的图片本身即我们已知的图片文件，bufferedImage只是图片文件中的所有具体内容都在此对象中)
         // 还可以写入outputstream中或者某个path中，一般都是像demo这么写。其他两种方式暂未尝试
-        BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-        // 2.2、将图片信息对象具象化为图片文件。
-        // 为了方便在内存中操作图片，将图片写入输出流，输出流便于转成byte[]数组，这样生成的图片就方便在java内存中进行各种操作，而不是直接生成张图片放在服务器上，不方便代码操作~~~~~~
-        // 如果一个接口需要直接返回一张图片，就从response对象中获取outputstream，通过ImageIO将bufferedImage其写入response.outputstream即可；否则如下就直接创建一个即可。
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        // 通过ImageIO创建图像文件，并写入指定的输出流中
-        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-        // 2.2、将图片信息转成base64字符串，方便在java代码中操作(字符串的信息就是一张完整的图片信息，而不是在服务器磁盘上直接生成一张图片)，并和前端进行数据交互
-        byte[] pngData = byteArrayOutputStream.toByteArray();
-        String base64Image = Base64.getEncoder().encodeToString(pngData);
-        return base64Image;
+        File file = new File("C:\\Users\\admin\\Desktop\\qrcode.png");
+        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", file.toPath());
+        return "base64Image";
+    }
+
+    /**
+     * 解析二维码文件
+     *
+     * @param qrcodeInputStream 二维码文件输入流
+     * @return 二维码的内容
+     * @throws IOException
+     * @throws NotFoundException
+     */
+    public static String readQRCodeImg(InputStream qrcodeInputStream) throws IOException, NotFoundException {
+        BufferedImage bufferedImage = ImageIO.read(qrcodeInputStream);
+        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(bufferedImage)));
+        Map<DecodeHintType, Object> hints = Maps.newHashMap();
+        hints.put(DecodeHintType.CHARACTER_SET, StandardCharsets.UTF_8);
+        Result result = new MultiFormatReader().decode(binaryBitmap, hints);
+        return result.getText();
     }
 }
