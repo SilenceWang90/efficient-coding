@@ -47,7 +47,7 @@ public class QRCodeGeneratorUtil {
         hints.put(EncodeHintType.CHARACTER_SET, StandardCharsets.UTF_8);
         // 设置纠错等级，纠错等级越高，二维码损坏后依然能识别的能力就越强，相对的，能存储的信息就越少(即text的内容就越少)
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
-        // 1.2、创建二维码，将二维码的内容text、长度宽度、设置的属性hints作为配置传入。其中BarcodeFormat为二维码的标准。我们生成QRCode标注的二维码即可
+        // 1.2、创建二维码，将二维码的内容text、长度宽度、设置的属性hints作为配置传入。其中BarcodeFormat为二维码的标准，我们生成常用的QRCode标准的二维码即可
         // BitMatrix就是二维码的黑白矩阵信息
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hints);
         /** 2、生成二维码图片信息 **/
