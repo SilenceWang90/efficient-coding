@@ -52,6 +52,7 @@ public class QRCodeGeneratorUtil {
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hints);
         /** 2、生成二维码图片信息 **/
         // 2.1、将二维码信息创建为二维码图像对象(注意bufferedImage并非最终的图片本身即我们已知的图片文件，bufferedImage只是图片文件中的所有具体内容都在此对象中)
+        // 还可以写入outputstream中或者某个path中，一般都是像demo这么写。其他两种方式暂未尝试
         BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
         // 2.2、将图片信息对象具象化为图片文件。
         // 为了方便在内存中操作图片，将图片写入输出流，输出流便于转成byte[]数组，这样生成的图片就方便在java内存中进行各种操作，而不是直接生成张图片放在服务器上，不方便代码操作~~~~~~
