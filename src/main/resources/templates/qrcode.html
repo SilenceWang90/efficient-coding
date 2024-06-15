@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Your QR Code</h1>
+<!-- 'data:image/png;base64,'这个内容是html的技术，允许在html中嵌入文件数据(文件可以是音频视频图片等)，而不需要通过外部文件的引用的方式~~~ -->
 <img th:src="'data:image/png;base64,'+${QRCode}" alt="Description of the image">
 </body>
 </html>
