@@ -13,7 +13,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @Configuration
 public class I18nConfig {
     /**
-     * 创建messageSource，指定
+     * 创建messageSource，指定国际化文件的path和编码格式
      *
      * @return
      */

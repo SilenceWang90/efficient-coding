@@ -19,6 +19,7 @@ import java.util.Locale;
 public class CustomLocaleResolver implements LocaleResolver {
     /**
      * 解析request，创建国际化需要的Locale给MessageSource
+     * 下面暂时只有根据请求url参数获取lang去解析Locale
      *
      * @param request
      * @return
