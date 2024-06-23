@@ -46,7 +46,7 @@ public class TestI18nController {
      * 指定需要的key，返回对应的key的信息
      *
      * @param specificKeys 指定的key
-     * @param locale       解析的locale
+     * @param locale       springmvc解析的locale
      * @return
      */
     @GetMapping("/getSpecificI18nInfo")
