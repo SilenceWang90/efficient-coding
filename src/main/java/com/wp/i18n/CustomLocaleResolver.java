@@ -36,8 +36,8 @@ public class CustomLocaleResolver implements LocaleResolver {
             } else {
                 result = Locale.forLanguageTag(lang);
             }
-
         } else {
+            // 设置默认的Locale：从环境变量中获取locale。Locale类是java.util的
             result = Locale.getDefault();
         }
         return result;
