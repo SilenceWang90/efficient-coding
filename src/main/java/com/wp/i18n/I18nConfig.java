@@ -20,11 +20,12 @@ public class I18nConfig {
     @Bean
     public MessageSource messageSource() {
         // 指定要读取的国际化的资源文件。注意填写的是basename的路径，即在idea中创建Resource Bundle设置的basename～～～不需要把文件的全名称写上
-        /**1、ReloadableResourceBundleMessageSource：路径必须是带classpath的，因为ReloadableResourceBundleMessageSource不仅可以
-         * 从classpath中加载文件，也可以从file文件系统中查找，所以如果不写classpath默认是从file:中查找**/
+        /**1、ReloadableResourceBundleMessageSource：路径必须是带classpath:或者file:的，因为ReloadableResourceBundleMessageSource不仅可以
+         * 从classpath中加载文件，也可以从file文件系统中查找，所以如果不写classpath:或者file:则无法读取资源文件**/
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        //messageSource.setBasenames("classpath:static/i18n/wp_test_html", "classpath:static/i18n/wp_test_js");
-        messageSource.addBasenames("classpath:static/i18n/wp_test_html", "classpath:static/i18n/wp_test_js");
+        messageSource.setBasenames("classpath:static/i18n/wp_test_html", "classpath:static/i18n/wp_test_js");
+        //messageSource.addBasenames("file:/Users/manman/wangpeng/static/i18n/wp_test_html"
+        //        , "file:/Users/manman/wangpeng/static/i18n/wp_test_js");
         /**2、ResourceBundleMessageSource：路径必须是没有classpath的，因为ResourceBundleMessageSource默认就是从classpath中查找，
          * 再写classpath:就找不到了～～～**/
         /*ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
