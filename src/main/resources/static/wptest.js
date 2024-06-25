@@ -10,4 +10,4 @@ var testi18n = function () {
             alert("返回的信息为：" + response.greet);
         }
     })
-}();
+};

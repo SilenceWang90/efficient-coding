@@ -1,7 +1,6 @@
 package com.wp.i18n;
 
 import com.google.common.collect.Maps;
-import net.sf.cglib.core.Local;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -54,7 +53,8 @@ public class TestI18nController {
     @ResponseBody
     public Map<String, Object> getSpecificI18nInfo(@RequestParam("specific-keys") List<String> specificKeys
             , Locale locale, HttpServletRequest httpServletRequest) {
-        System.out.println(httpServletRequest.getHeader("lang"));
+        System.out.println("lang请求头：" + httpServletRequest.getHeader("lang"));
+        System.out.println("my-lang请求头：" + httpServletRequest.getHeader("my-lang"));
         Locale requestLocale = httpServletRequest.getLocale();
         Map<String, Object> info = Maps.newHashMap();
         specificKeys.forEach(obj -> info.put(obj, messageSource.getMessage(obj, null, locale)));
