@@ -10,5 +10,8 @@ public class GitTest {
         System.out.println("第一次提交");
         System.out.println("第二次提交");
         System.out.println("第三次提交");
+        System.out.println("第四次提交");
+        System.out.println("第五次提交");
+        System.out.println("从第五次提交回退，然后增加此内容进行第六次提交");
     }
 }
