@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  **/
 @RestController
 @RequestMapping("/test1")
-public class Test1Controller {
+public class TestController {
     @Resource
     private TestThreadLocalService testThreadLocalService;
 
