@@ -35,5 +35,6 @@ public class GitTest {
         System.out.println("第二十七次提交");
         System.out.println("第二十八次提交");
         System.out.println("第二十九次提交");
+        System.out.println("第三十次提交");
     }
 }
