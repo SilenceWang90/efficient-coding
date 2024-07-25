@@ -1,6 +1,10 @@
 spring:
   application:
     name: scaffold-project
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/mydatabase
+
 individual-name: wp-main-name
 
 # mustache模板需要渲染的内容
