@@ -40,15 +40,33 @@ public class Base64DealFileSerivceImpl implements Base64DealFileSerivce {
     public void base64ToFileExample(String base64String, HttpServletResponse response) throws IOException {
 //        response.setHeader("content-disposition", "attachment;filename=convert.docx");
 //        response.setContentType("application/octet-stream;charset=UTF-8");
+        /** 小文件可以直接通过输出流的write()函数将文件信息写入输出流中 **/
         // 传文档的时候一定要告知文件类型才可以！！！
         File file = new File("/Users/manman/Desktop/conversion.docx");
         // 解码Base64字符串
         byte[] decodedBytes = Base64.getDecoder().decode(base64String);
         try (FileOutputStream fos = new FileOutputStream(file)) {
-//            response.getOutputStream().write(decodedBytes);
             fos.write(decodedBytes);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        /** 大文件不能像上面一样把文件一次写入，要一次写一部分，防止文件过大造成问题 **/
+        // 创建文件输出流
+        /*try (FileOutputStream fos = new FileOutputStream("/Users/manman/Desktop/conversion.xlsx");
+             BufferedOutputStream bos = new BufferedOutputStream(fos);
+             ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(base64String))) {
+            // 创建一个缓冲区
+            byte[] buffer = new byte[8192]; // 可以根据需要调整缓冲区大小
+            int bytesRead;
+            // 通过缓冲区逐块读取数据
+            while ((bytesRead = bais.read(buffer)) != -1) {
+                bos.write(buffer, 0, bytesRead);
+            }
+            bos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 处理异常，例如记录日志
+        }*/
     }
 }
