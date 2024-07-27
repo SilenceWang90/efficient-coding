@@ -18,7 +18,7 @@ import java.io.IOException;
  **/
 @RestController
 @RequestMapping("/testBase64")
-public class TestBase64Controller {
+public class Base64Controller {
     @Autowired
     private Base64DealFileSerivce base64DealFileSerivce;
 
