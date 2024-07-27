@@ -520,5 +520,7 @@ public class FileController {
     public void removeFileOrDirectory(String path) throws IOException {
         FileUtil.removeFile(path);
     }
+
+    /** 通过base64处理文件，即将文件转成base64字符串，以及将base64字符串还原成文件的方法参见TestBase64Controller中的方法 **/
 }
 
