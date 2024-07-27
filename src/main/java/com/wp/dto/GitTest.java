@@ -22,5 +22,19 @@ public class GitTest {
         System.out.println("第十四次提交");
         System.out.println("第十五次提交");
         System.out.println("第十六次提交");
+        System.out.println("第十七次提交");
+        System.out.println("第十八次提交");
+        System.out.println("第十九次提交");
+        System.out.println("第二十次提交");
+        System.out.println("第二十一次提交");
+        System.out.println("第二十二次提交");
+        System.out.println("第二十三次提交");
+        System.out.println("第二十四次提交");
+        System.out.println("第二十五次提交");
+        System.out.println("第二十六次提交");
+        System.out.println("第二十七次提交");
+        System.out.println("第二十八次提交");
+        System.out.println("第二十九次提交");
+        System.out.println("第三十次提交_master");
     }
 }
