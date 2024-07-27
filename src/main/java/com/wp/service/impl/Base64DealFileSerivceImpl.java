@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Base64;
 
 /**
@@ -40,12 +38,14 @@ public class Base64DealFileSerivceImpl implements Base64DealFileSerivce {
 
     @Override
     public void base64ToFileExample(String base64String, HttpServletResponse response) throws IOException {
-        response.setHeader("content-disposition", "attachment;filename=convert.docx");
-        response.setContentType("application/octet-stream;charset=UTF-8");
+//        response.setHeader("content-disposition", "attachment;filename=convert.docx");
+//        response.setContentType("application/octet-stream;charset=UTF-8");
+        File file = new File("/Users/manman/Desktop/conversion.docx");
         // 解码Base64字符串
         byte[] decodedBytes = Base64.getDecoder().decode(base64String);
-        try {
-            response.getOutputStream().write(decodedBytes);
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+//            response.getOutputStream().write(decodedBytes);
+            fos.write(decodedBytes);
         } catch (IOException e) {
             e.printStackTrace();
         }

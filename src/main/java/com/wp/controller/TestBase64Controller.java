@@ -29,6 +29,8 @@ public class TestBase64Controller {
 
     @RequestMapping("/base64StrToFile")
     public void base64StrToFile(@RequestBody String base64String, HttpServletResponse response) throws IOException {
-        base64DealFileSerivce.base64ToFileExample(base64String,response);
+        System.out.println("获取的字符串信息为：" + base64String);
+        base64String = base64String.substring(1, base64String.length()-1);
+        base64DealFileSerivce.base64ToFileExample(base64String, response);
     }
 }
