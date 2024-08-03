@@ -399,7 +399,7 @@ public class FileController {
                  * 2、如果zip文件解压后要有层级(目录)区分，那么只需要在ZipEntry的名称上，在文件名称前面将目录层级加上即可
                  * 如下就是"++i+'\\'+文件名称"，++i就是目录～目录和文件之间通过\\或者/进行分隔，目录就会自动创建
                  * 这样打包下载的时候ZipStream就会自动生成文件所在文件夹目录
-                 * 3、zipOutputStream通过putNextEntry()设置完下一个文件的具体信息后，就要执行zipOutputStream.write()方法进行文件的写入操作
+                 * 3、zipOutputStream通过putNextEntry()设置完下一个文件的具体信息后(文件目录、文件名称)，就要执行zipOutputStream.write()方法进行文件的写入操作
                  * zipOutputStream就是通过如上这种方式将压缩包中的每个文件所在目录与文件本身进行绑定的。
                  * **/
                 /*ZipEntry zipEntry = new ZipEntry(file.getName());*/
