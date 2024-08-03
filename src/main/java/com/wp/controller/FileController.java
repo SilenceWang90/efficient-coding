@@ -455,7 +455,7 @@ public class FileController {
                 // 获得zip输出流
                 ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)
         ) {
-            // 如果需要创建统一根目录，在此处传入根目录路径即可，如下图，将sourceFolderPath中的内容都打包到parentFolder\wp-initializer-folder\目录下
+            // 如果需要创建统一根目录(即解压缩的时候还有一层目录，而不是直接至文件)，在此处传入根目录路径即可，如下图，将sourceFolderPath中的内容都打包到parentFolder\wp-initializer-folder\目录下
             /*compress("parentFolder\\wp-initializer-folder\\", new File(sourceFolderPath), zipOutputStream);*/
             compress("", new File(sourceFolderPath), zipOutputStream);
         } catch (Exception exception) {
