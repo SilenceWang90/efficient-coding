@@ -55,7 +55,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload")
-    public String upload(@RequestParam("myfile") MultipartFile myfile,@RequestParam("wpName") String wpName) {
+    public String upload(@RequestParam("myfile") MultipartFile myfile, @RequestParam("wpName") String wpName) {
         //文件上传...
         try {
             fileService.upload(myfile.getInputStream(), myfile.getOriginalFilename());
@@ -465,6 +465,8 @@ public class FileController {
 
     /**
      * 对文件夹打包的核心逻辑
+     * 注意：如果要打包的是一个文件夹，且该文件夹为空的，而且打包又不指定一个统一的根目录。那么因为此时的parentFolderPath参数为空字符串。那么执行
+     * 如下逻辑中zipOutputStream.putNextEntry(new ZipEntry(parentFolderPath + "\\"));的代码时，将不会创建任何内容
      *
      * @param parentFolderPath 父级目录(当前文件或文件夹所属目录)。打包时，当前文件夹或文件(currentFile)所在的目录。
      * @param currentFile      当前的目录或文件
