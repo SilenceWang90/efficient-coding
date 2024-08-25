@@ -204,6 +204,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
+
+        <!-- 和其他poi的jar有冲突，要想验证可以把com.wp.generate_file.GenerateFileController.generateWord接口
+        放在另一个干净的工程中验证即可-->
+<!--        <dependency>-->
+<!--            <groupId>com.deepoove</groupId>-->
+<!--            <artifactId>poi-tl</artifactId>-->
+<!--            <version>1.12.0</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 
