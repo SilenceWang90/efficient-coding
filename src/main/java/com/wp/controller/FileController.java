@@ -91,17 +91,6 @@ public class FileController {
     }
 
     /**
-     * 填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
-     *
-     * @param response
-     */
-    @GetMapping("/exportWithFillDataInTemplate")
-    public String exportWithFillDataInTemplate(HttpServletResponse response) throws UnsupportedEncodingException {
-        fileService.exportWithFillDataInTemplate(response);
-        return "导出成功";
-    }
-
-    /**
      * EasyExcel读取文档
      *
      * @param file
@@ -111,6 +100,28 @@ public class FileController {
     public String readEasyExcel(@NotNull MultipartFile file) throws IOException {
         fileService.readEasyExcel(file.getInputStream());
         return "读取成功";
+    }
+
+    /**
+     * EasyExcel生成Excel文档：文件导出(excel)
+     *
+     * @param response
+     * @return
+     */
+    @GetMapping("/exportExcel")
+    public void exportExcel(HttpServletResponse response) {
+        fileService.exportExcel(response);
+    }
+
+    /**
+     * EasyExcel生成Excel文档：填充数据到固定模板(模板中通过{属性名}来确定要填充的内容)
+     *
+     * @param response
+     */
+    @GetMapping("/exportWithFillDataInTemplate")
+    public String exportWithFillDataInTemplate(HttpServletResponse response) throws UnsupportedEncodingException {
+        fileService.exportWithFillDataInTemplate(response);
+        return "导出成功";
     }
 
     @GetMapping("/exportExcelByte")
@@ -145,18 +156,6 @@ public class FileController {
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(bytes);
         System.out.println("下载成功");
-    }
-
-
-    /**
-     * 文件导出(excel)
-     *
-     * @param response
-     * @return
-     */
-    @GetMapping("/exportExcel")
-    public void exportExcel(HttpServletResponse response) {
-        fileService.exportExcel(response);
     }
 
 
