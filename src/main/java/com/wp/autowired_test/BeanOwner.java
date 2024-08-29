@@ -17,6 +17,6 @@ public class BeanOwner {
     }
     @Autowired
     public void test(){
-        System.out.println("不需要依赖注入的时候我不能被执行，这句话不会被输出");
+        System.out.println("不需要依赖注入的时候我也会被执行");
     }
 }
