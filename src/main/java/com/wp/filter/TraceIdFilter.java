@@ -16,7 +16,7 @@ import java.util.UUID;
  * @Created by wangpeng116
  */
 //拦截所有请求
-@WebFilter(urlPatterns = "/*")
+@WebFilter(urlPatterns = "/*", asyncSupported = true)
 //第一个经过的过滤器
 @Order(1)
 public class TraceIdFilter implements Filter {
