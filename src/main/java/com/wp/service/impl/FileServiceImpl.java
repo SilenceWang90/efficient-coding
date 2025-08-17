@@ -210,9 +210,13 @@ public class FileServiceImpl implements FileService {
     @Override
     public void readEasyExcel(InputStream inputStream) {
         // EasyExcelListener构造函数导入Spring的对象
-        ExcelReader excelReader = EasyExcel.read(inputStream, ReadExcelDto.class, new EasyExcelListener(businessService, saveMapper)).build();
+        ExcelReader excelReader = EasyExcel.read(inputStream, ReadExcelDto.class,new EasyExcelListener(businessService, saveMapper)).build();
         // 读取哪个sheet
-        ReadSheet readSheet = EasyExcel.readSheet(0).build();
+        ReadSheet readSheet = EasyExcel.readSheet(0)
+//                .headRowNumber(0？-1？)官网来看这个值表示excel中头的行数，默认是1，所以如果是0感觉符合要求
+                .build();
+        // 设置从第几行开始读取数据？？默认是1即跳过首行，设置为0则从首行就开始读取数据？？？？？？
+//        readSheet.setHeadRowNumber(0？-1？);官网来看这个值表示excel中头的行数，默认是1，所以如果是0感觉符合要求
         excelReader.read(readSheet);
         // 读取多个sheet
         /*ReadSheet readSheet2 = EasyExcel.readSheet(1).build();
