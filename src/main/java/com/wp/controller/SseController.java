@@ -19,6 +19,9 @@ public class SseController {
 
     @GetMapping("/test1")
     public SseEmitter test1() {
+        TestDto dto = new TestDto();
+        dto.setAge(10);
+        dto.setName("wwww");
         /** 1、创建长链接对象 **/
         SseEmitter sseEmitter = new SseEmitter(20000L);
         // 1.1、链接出现异常时触发
@@ -46,6 +49,7 @@ public class SseController {
                             // 当链接断开后，允许客户端在指定时间后进行重连，避免频繁重连造成服务器压力
                             .reconnectTime(5000L)
                             .data("我是你想要的信息，这次是我的SseEmitter学习，希望以后可以把websocket也学好，加油！！！");
+//                            .data(dto);// 对象自动序列化
                     // 参数说明
                     sseEmitter.send(sseEventBuilder);
                     Thread.sleep(1500L);
