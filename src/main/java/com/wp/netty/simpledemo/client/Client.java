@@ -36,9 +36,9 @@ public class Client {
                     }
                 });
         //4. 服务器端绑定端口并启动服务
-        ChannelFuture cf = bootstrap.connect("127.0.0.1", 8765);
+        ChannelFuture cf = bootstrap.connect("127.0.0.1", 8765)
                 // 阻塞式操作，保证启动完成再返回cf。否则没有该行代码会导致下面的发送方法失败
-//                .sync();
+                .sync();
 
         //5. 发送一条数据到服务器端
         cf.channel().writeAndFlush(Unpooled.copiedBuffer("hello netty!".getBytes()));
@@ -47,7 +47,7 @@ public class Client {
 //        Thread.sleep(1000);
 //        cf.channel().writeAndFlush(Unpooled.copiedBuffer("hello netty again!".getBytes()));
 
-        //7. 保持服务器运行。必须！防止main线程退出。如果集成在其他框架比如spring时就不需要这段代码了
+        //7. 阻塞当前线程（通常是主线程），保持Netty服务线程的运行，直到Netty的Channel被关闭为止。必须！防止main线程退出。如果集成在其他框架比如spring时就不需要这段代码了
         cf.channel().closeFuture().sync();
 
         // 8、释放资源
