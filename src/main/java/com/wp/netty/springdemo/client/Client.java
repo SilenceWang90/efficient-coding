@@ -39,7 +39,7 @@ public class Client {
                     });
 
             ChannelFuture f = b.connect("127.0.0.1", 8080).sync();
-            System.out.println("客户端已连接到服务器...");
+            System.out.println("Client客户端已连接到服务器...");
             f.channel().closeFuture().sync();
         } finally {
             group.shutdownGracefully();

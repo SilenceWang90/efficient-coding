@@ -40,7 +40,7 @@ public class Server {
                     });
 
             ChannelFuture f = b.bind(8080).sync();
-            System.out.println("String服务器启动在端口 8080...");
+            System.out.println("Server服务器启动在端口 8080...");
             f.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
