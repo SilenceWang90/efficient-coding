@@ -1,54 +1,32 @@
 package com.wp.netty.simpledemo.server;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * @author wangpeng
  * @description ServerHandler
- * @date 2025/8/22 17:46
+ * @date 2025/8/24 17:41
  **/
-public class ServerHandler extends ChannelInboundHandlerAdapter {
-    /**
-     * channelActive
-     * 通道激活方法
-     */
+public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.err.println("server channel active..");
+    public void channelActive(ChannelHandlerContext ctx) {
+        System.out.println("有客户端连接: " + ctx.channel().remoteAddress());
     }
 
-    /**
-     * channelRead
-     * 读写数据核心方法
-     */
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //1. 读取客户端的数据(缓存中去取并打印到控制台)
-        ByteBuf buf = (ByteBuf) msg;
-        byte[] request = new byte[buf.readableBytes()];
-        buf.readBytes(request);
-        String requestBody = new String(request, "utf-8");
-        System.err.println("Server: " + requestBody);
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) { // msg直接就是String!
+        // 1. 直接打印收到的字符串
+        System.out.println("服务器收到: " + msg);
 
-        //2. 返回响应数据
-        String responseBody = "返回响应数据，" + requestBody;
-        ctx.writeAndFlush(Unpooled.copiedBuffer(responseBody.getBytes()));
-
-        // 继续将事件传播给下一个Handler
-//        ctx.fireChannelRead(msg);
-
+        // 2. 直接回复一个字符串
+        String response = "你好客户端，我收到了你的消息: '" + msg + "'";
+        ctx.writeAndFlush(response); // 直接写入String！
     }
 
-    /**
-     * exceptionCaught
-     * 捕获异常方法
-     */
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        ctx.fireExceptionCaught(cause);
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
         ctx.close();
     }
 }
