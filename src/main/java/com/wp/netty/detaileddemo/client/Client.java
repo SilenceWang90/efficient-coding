@@ -35,7 +35,7 @@ public class Client {
                         ch.pipeline().addLast(new ClientHandler());
                     }
                 });
-        //4. 服务器端绑定端口并启动服务
+        //4. client端链接server服务
         ChannelFuture cf = bootstrap.connect("127.0.0.1", 8765)
                 // 阻塞式操作，保证启动完成再返回cf。否则没有该行代码会导致下面的发送方法失败
                 .sync();
