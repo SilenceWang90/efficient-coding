@@ -24,6 +24,7 @@ public class Client {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(workGroup)
                 .channel(NioSocketChannel.class)
+                // 相关配置信息说明参见server中的说明即可，配置相同
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
                 .option(ChannelOption.SO_RCVBUF, 1024 * 32)
                 .option(ChannelOption.SO_SNDBUF, 1024 * 32)
