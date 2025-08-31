@@ -1,0 +1,1 @@
+基于ChannelInboundHandlerAdapter创建netty的handler。且配置信息完善
