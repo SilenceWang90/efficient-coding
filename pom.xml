@@ -219,11 +219,21 @@
 <!--            <version>1.12.0</version>-->
 <!--        </dependency>-->
 
+        <!-- 引入netty依赖 -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.36.Final</version>
         </dependency>
+
+        <!-- 引入google的protobuf依赖 -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.7.1</version>
+        </dependency>
+
+
     </dependencies>
 
 

@@ -1,0 +1,15 @@
+// 定义使用proto3版本
+syntax = "proto3";
+// option为可选类型属性，非必须设置的参数。自定义根据当前proto文件生成的java文件所属的package
+option java_package = "com.wp.protobuf";
+// option为可选类型属性，非必须设置的参数。自定义根据当前proto文件生成的java文件类名
+option java_outer_classname = "UserModule";
+
+// message为关键字，User为自定义的名称
+message User {
+  string userId = 1;
+  int32 age = 2;
+  string userName = 3;
+  // repeated代表数组，favourite即数组类型，每个元素是string类型
+  repeated string favourite = 4;
+}
