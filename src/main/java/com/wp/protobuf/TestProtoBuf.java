@@ -24,8 +24,7 @@ public class TestProtoBuf {
 
     public static byte[] serial() {
         List<String> favourates = Lists.newArrayList("跑步", "电影");
-        UserModule.User user = UserModule
-                .User
+        UserModule.User user = UserModule.User
                 .newBuilder()
                 .setUserId("1").setAge(18).setUserName("wangpeng").addAllFavourite(favourates)
                 .build();
