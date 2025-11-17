@@ -33,6 +33,7 @@ public class QRcodeController {
     }
 
     /**
+     * @Description 解析二维码
      * @param multipartFile
      * @return
      */
