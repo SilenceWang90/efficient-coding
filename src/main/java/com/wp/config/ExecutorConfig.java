@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @Classname ExecutorConfig
- * @Description excel导出功能线程池
+ * @Description 线程池配置
  * @Date 2021/2/20 14:08
  * @Created by wangpeng116
  */
@@ -50,6 +50,11 @@ public class ExecutorConfig {
      */
     private static final String THREAD_NAME_PREFIX = "wangpeng-";
 
+
+    /**
+     * 常规服务线程池
+     * @return
+     */
     @Bean(name = "commonTaskExecutor")
     public ThreadPoolTaskExecutor asyncThreadExecutor() {
         ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
