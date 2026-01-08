@@ -143,7 +143,7 @@ public class FileController {
 
 
     /**
-     * 从其他接口获取文件信息
+     * 从其他接口获取文件信息：通过byte[]数组接收，如果文件过大容易出现OOM问题
      */
     @GetMapping("/getFileInfoByte")
     public void getFileInfoByte(HttpServletResponse response) throws IOException {
@@ -160,7 +160,7 @@ public class FileController {
 
 
     /**
-     * 从其他接口获取文件信息
+     * 从其他接口获取文件信息：通过Spring的Resource对象接收数据。原理是创建一个连接到文件的输入流以及连接到客户端的输出流，通过缓冲区逐步读取，因此不容易出现内存溢出的问题。
      */
     @GetMapping("/getFileInfo")
     public void getFileInfo(HttpServletResponse response) throws IOException {
