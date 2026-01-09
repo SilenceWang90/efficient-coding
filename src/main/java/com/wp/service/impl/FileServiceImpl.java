@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -85,14 +86,13 @@ public class FileServiceImpl implements FileService {
     @Override
     public void download(String fileId, HttpServletResponse response) {
         //文件路径，一般是通过文件id获取，实际要根据实际的业务规则
-        String filePath = "F:/审批通过数据.xlsx";
+        String filePath = "/Users/manman/Desktop/每日待办事项.txt";
         File file = new File(filePath);
-        try (
-                OutputStream outputStream = response.getOutputStream();
-                InputStream inputStream = new FileInputStream(file)
-        ) {
+        try (InputStream inputStream = new FileInputStream(file))
+        {
+            OutputStream outputStream = response.getOutputStream();
             //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
-            String filename = new String(file.getName().getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            String filename = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name());
             // 此配置保证文件二进制信息被解析成正确的文件，否则如果只有下面的content-type获取到的就是一个二进制信息的文件
             response.setHeader("content-disposition", "attachment;filename=" + filename);
             // 一般情况只要有content-disposition就可以正常下载文件；如果不配置content-disposition只有content-type，则下载下载来的将是一个二进制信息的文件
@@ -210,7 +210,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void readEasyExcel(InputStream inputStream) {
         // EasyExcelListener构造函数导入Spring的对象
-        ExcelReader excelReader = EasyExcel.read(inputStream, ReadExcelDto.class,new EasyExcelListener(businessService, saveMapper)).build();
+        ExcelReader excelReader = EasyExcel.read(inputStream, ReadExcelDto.class, new EasyExcelListener(businessService, saveMapper)).build();
         // 读取哪个sheet
         ReadSheet readSheet = EasyExcel.readSheet(0)
 //                .headRowNumber(0？-1？)官网来看这个值表示excel中头的行数，默认是1，所以如果是0感觉符合要求
