@@ -131,7 +131,6 @@ public class FileController {
         String filePath = "F:/审批通过数据.xlsx";
         File file = new File(filePath);
         InputStream inputStream = new FileInputStream(file);
-
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int n = 0;
@@ -165,21 +164,25 @@ public class FileController {
     @GetMapping("/getFileInfo")
     public void getFileInfo(HttpServletResponse response) throws IOException {
         ResponseEntity<Resource> entity = restTemplate.getForEntity("http://localhost:8080/api/files/exportExcel", Resource.class);
-        // 别人的输出就是我的输入
-        InputStream inputStream = entity.getBody().getInputStream();
-        OutputStream outputStream = response.getOutputStream();
-        //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
-        String filename = new String("我是导出的excel.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-        response.setHeader("content-disposition", "attachment;filename=" + filename);
-        // 缓冲区
-        byte[] buffer = new byte[1024];
-        // 读取文件流长度
-        int len;
-        // 读取到的文件内容没有结束，则写入输出流中
-        while ((len = inputStream.read(buffer)) > 0) {
-            // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
-            // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
-            outputStream.write(buffer, 0, len);
+        // 使用 try-with-resources 自动关闭输入流
+        try (InputStream inputStream = entity.getBody().getInputStream()) {
+            // 别人的输出就是我的输入
+            OutputStream outputStream = response.getOutputStream();
+            //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
+            String filename = new String("我是导出的excel.xlsx".getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            response.setHeader("content-disposition", "attachment;filename=" + filename);
+            // 缓冲区
+            byte[] buffer = new byte[1024];
+            // 读取文件流长度
+            int len;
+            // 读取到的文件内容没有结束，则写入输出流中
+            while ((len = inputStream.read(buffer)) > 0) {
+                // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
+                // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
+                outputStream.write(buffer, 0, len);
+            }
+            // 刷新缓冲区，确保数据完全发送
+            outputStream.flush();
         }
         System.out.println("下载");
     }
