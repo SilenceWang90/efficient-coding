@@ -90,13 +90,15 @@ public class FileServiceImpl implements FileService {
         File file = new File(filePath);
         try (InputStream inputStream = new FileInputStream(file))
         {
+            // 输出流是从response中获取的，不需要手动关闭，也尽量不要关闭，否则可能影响拦截器的后置处理方法不执行
             OutputStream outputStream = response.getOutputStream();
-            //设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
+            // 设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
             String filename = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name());
-            // 此配置保证文件二进制信息被解析成正确的文件，否则如果只有下面的content-type获取到的就是一个二进制信息的文件
+            // 设置 Content-Disposition 响应头，告诉浏览器以下载方式处理该文件，并设置下载后的文件名。
+            // 如果不设置此头，浏览器可能会尝试直接在窗口中打开文件（例如图片、PDF、文本等），或者下载的文件名可能不正确（如默认为接口名）。
             response.setHeader("content-disposition", "attachment;filename=" + filename);
-            // 一般情况只要有content-disposition就可以正常下载文件；如果不配置content-disposition只有content-type，则下载下载来的将是一个二进制信息的文件
-            // 移动端安卓策略为先找Content_Type，找不到就找content-disposition，都找不到下载的就是.bin文件
+            // 设置 Content-Type 响应头，告知浏览器文件内容的媒体类型。
+            // application/octet-stream 是通用的二进制流类型。结合 Content-Disposition 使用，可以确保浏览器正确下载文件。
             response.setContentType("application/octet-stream;charset=UTF-8");
             // 缓冲区
             byte[] buffer = new byte[1024];
