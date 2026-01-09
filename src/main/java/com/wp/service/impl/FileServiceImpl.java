@@ -16,6 +16,8 @@ import com.wp.mapper.SaveMapper;
 import com.wp.service.BusinessService;
 import com.wp.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -83,13 +85,24 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String filePath = "/Users/manman/Desktop/wanlianyida/myoss_10808382.pdf";
+        File file = new File(filePath);
+        String filename = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name());
+        // import org.springframework.http.MediaTypeFactory;
+        // 获取文件应该设置的contentType
+        String contentType = MediaTypeFactory.getMediaType(filename)
+                .orElse(MediaType.APPLICATION_OCTET_STREAM)
+                .toString();
+        System.out.println(contentType);
+    }
+
     @Override
     public void download(String fileId, HttpServletResponse response) {
         //文件路径，一般是通过文件id获取，实际要根据实际的业务规则
         String filePath = "/Users/manman/Desktop/每日待办事项.txt";
         File file = new File(filePath);
-        try (InputStream inputStream = new FileInputStream(file))
-        {
+        try (InputStream inputStream = new FileInputStream(file)) {
             // 输出流是从response中获取的，不需要手动关闭，也尽量不要关闭，否则可能影响拦截器的后置处理方法不执行
             OutputStream outputStream = response.getOutputStream();
             // 设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
@@ -99,6 +112,14 @@ public class FileServiceImpl implements FileService {
             response.setHeader("content-disposition", "attachment;filename=" + filename);
             // 设置 Content-Type 响应头，告知浏览器文件内容的媒体类型。
             // application/octet-stream 是通用的二进制流类型。结合 Content-Disposition 使用，可以确保浏览器正确下载文件。
+            /** 如果想准确获取文件的content-type，代码如下：
+             * // import org.springframework.http.MediaTypeFactory;
+             *         // 获取文件应该设置的contentType
+             *         String contentType = MediaTypeFactory.getMediaType(filename)
+             *                 .orElse(MediaType.APPLICATION_OCTET_STREAM)
+             *                 .toString();
+             *         System.out.println(contentType);
+             * **/
             response.setContentType("application/octet-stream;charset=UTF-8");
             // 缓冲区
             byte[] buffer = new byte[1024];
