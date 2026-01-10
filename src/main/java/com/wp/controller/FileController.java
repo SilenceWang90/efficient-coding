@@ -700,9 +700,6 @@ public class FileController {
 //                }
 //                // 必须：封箱，zip流文件生成完成
 //                zipOutputStream.finish();
-////                httpServletResponse.setContentType("application/zip");
-////                String downloadName = URLEncoder.encode("发票汇总.zip", "UTF-8");
-////                httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + downloadName);
 //                log.info("ZIP打包下载成功");
 //            }
 //        } catch (Exception e) {
