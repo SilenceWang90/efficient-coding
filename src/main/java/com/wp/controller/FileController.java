@@ -405,27 +405,30 @@ public class FileController {
                  * zipOutputStream就是通过如上这种方式将压缩包中的每个文件所在目录与文件本身进行绑定的。
                  * **/
                 /*ZipEntry zipEntry = new ZipEntry(file.getName());*/
-                ZipEntry zipEntry = new ZipEntry(++i + "\\" + file.getName());
+                ZipEntry zipEntry = new ZipEntry(++i + "/" + file.getName());
                 /** 执行完zipOutputStream.putNextEntry后就需要执行zipOutputStream.write：相当于先声明要插入一个文件，然后就把文件写进去 **/
                 zipOutputStream.putNextEntry(zipEntry);
-                InputStream inputStream = new FileInputStream(file);
-                // 缓冲区
-                byte[] buffer = new byte[1024];
-                // 读取文件流长度
-                int len;
-                // 读取到的文件内容没有结束，则写入输出流中
-                while ((len = inputStream.read(buffer)) > 0) {
-                    // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
-                    // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
-                    zipOutputStream.write(buffer, 0, len);
+                try (InputStream inputStream = new FileInputStream(file);) {
+                    // 缓冲区
+                    byte[] buffer = new byte[1024];
+                    // 读取文件流长度
+                    int len;
+                    // 读取到的文件内容没有结束，则写入输出流中
+                    while ((len = inputStream.read(buffer)) > 0) {
+                        // 将读取到的文件信息写入输出流，从0开始，读取到最后一位。
+                        // 不能省略off和len参数，因为如果文件结尾不够1024个字节那么outputStream.write(buffer)方法也会写入1024个字节，会导致文件信息丢失或被覆盖的问题
+                        zipOutputStream.write(buffer, 0, len);
+                    }
+                    // 文件读取完关闭文件输入流
+                    inputStream.close();
+                    // zipOutputStream.closeEntry();关闭后不影响下载，但是最好保留
+                    zipOutputStream.closeEntry();
+                } catch (Exception e) {
+                    log.error("读取文件并写入zip输出流失败：", e);
                 }
-                // 文件读取完关闭文件输入流
-                inputStream.close();
             }
             /** 4、最终生成zip文件必须关闭文件流信息*/
-            // 必须有下面2个关闭方法，否则zip导出的文件是无法打开的(因为用了try-with-resource，所以close方法不需要显式调用)
-            // zipOutputStream.closeEntry();关闭后不影响下载，但是最好保留
-            zipOutputStream.closeEntry();
+            // 已通过try-with-resource关闭，可以不用手动关闭
             // zipOutputStream.close();
         } catch (Exception e) {
             log.error("打包下载异常：", e);
