@@ -569,7 +569,7 @@ public class FileController {
 //            ClientBuilderConfiguration configuration = new ClientBuilderConfiguration();
 //            OSS ossClient = new OSSClientBuilder().build(ossEndpoint, accessKeyId, accessKeySecret, configuration);
 //            try {
-//                /** --- 第一阶段：多线程并行下载 --- **/
+//                /** --- 第一阶段：多线程并行下载至本地临时文件 --- **/
 //                List<CompletableFuture<DownloadResult>> futures = Lists.newArrayList();
 //                for (int i = 0; i < fileAddrList.size(); i++) {
 //                    final String url = fileAddrList.get(i);
