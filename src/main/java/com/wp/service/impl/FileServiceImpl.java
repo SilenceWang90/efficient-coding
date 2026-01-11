@@ -121,6 +121,13 @@ public class FileServiceImpl implements FileService {
              *         System.out.println(contentType);
              * **/
             response.setContentType("application/octet-stream;charset=UTF-8");
+            /** 输入流直接写到输出流，最棒的方式！节省内存，效率极高 **/
+            /**
+             * // Spring 提供的工具类，底层就是你写的那段 while 循环。IO关闭还是得自己做，推荐try-with-resource
+             *  StreamUtils.copy(inputStream, outputStream);
+             * // 或者 Apache Commons IO
+             *  IOUtils.copy(inputStream, outputStream);
+             * **/
             // 缓冲区
             byte[] buffer = new byte[1024];
             // 读取文件流长度

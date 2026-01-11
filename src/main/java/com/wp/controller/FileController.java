@@ -13,6 +13,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -411,7 +412,7 @@ public class FileController {
                 zipOutputStream.putNextEntry(zipEntry);
                 try (InputStream inputStream = new FileInputStream(file);) {
                     // 缓冲区
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[8192];
                     // 读取文件流长度
                     int len;
                     // 读取到的文件内容没有结束，则写入输出流中
@@ -422,7 +423,7 @@ public class FileController {
                     }
                     // 文件读取完关闭文件输入流
                     inputStream.close();
-                    // zipOutputStream.closeEntry();关闭后不影响下载，但是最好保留
+                    // zipOutputStream.closeEntry();关闭后不影响，但是最好保留。作用是提示当前文件已经写入zipOutputStream完成可以开始写入下一个文件了
                     zipOutputStream.closeEntry();
                 } catch (Exception e) {
                     log.error("读取文件并写入zip输出流失败：", e);
@@ -550,7 +551,7 @@ public class FileController {
     }
 
     /**
-     * 多线程同时下载文件，然后打包上传至OSS文档服务器
+     * 多线程同时下载文件，然后打包上传至OSS文档服务器。但是此方式对内存要求较大，因为下载文件是直接通过byte[]数组下载到本地了，然后再一次写入到一个输出流中。
      */
 //    @GetMapping("/testAsyncDownloadAndZip")
 //    public void testAsyncDownloadAndZip(HttpServletResponse httpServletResponse) {
@@ -637,7 +638,7 @@ public class FileController {
 
 
     /**
-     * 多线程同时下载文件并打包返回给前端直接下载
+     * 多线程同时下载文件并打包返回给前端直接下载。但是此方式对内存要求较大，因为下载文件是直接通过byte[]数组下载到本地了，然后再一次写入到一个输出流中。
      */
 //    @GetMapping("/testAsyncDownloadAndZip")
 //    public void testAsyncDownloadAndZip(HttpServletResponse httpServletResponse) {
