@@ -744,17 +744,21 @@ public class FileController {
 
     // 辅助方法：递归删除目录
     private void deleteDir(File dir) {
-        if (dir != null && dir.exists()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    file.delete();
+        try {
+            if (dir != null && dir.exists()) {
+                File[] files = dir.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        file.delete();
+                    }
                 }
+                dir.delete();
+                log.info("清理临时目录完成: {}", dir.getAbsolutePath());
+            } else {
+                log.warn("临时目录不存在，无法清理: {}", dir.getAbsolutePath());
             }
-            dir.delete();
-            log.info("清理临时目录完成: {}", dir.getAbsolutePath());
-        } else {
-            log.warn("临时目录不存在，无法清理: {}", dir.getAbsolutePath());
+        } catch (Exception e) {
+            log.error("清理目录失败：{}，请确认是否需要手动清理", dir.getAbsolutePath(), e);
         }
     }
 
