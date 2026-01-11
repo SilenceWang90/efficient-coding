@@ -14,7 +14,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -735,7 +734,7 @@ public class FileController {
                 // zipOutputStream.finish();
                 log.info("ZIP打包下载成功");
             } finally {
-                // 删除本地创建的临时目录以及目录下的临时文件
+                /** 4、删除本地创建的临时目录以及目录下的临时文件 **/
                 deleteDir(tempDir);
             }
         } catch (Exception e) {
@@ -759,7 +758,118 @@ public class FileController {
         }
     }
 
-
+    /**
+     * 多线程同时下载文件至本地的临时文件，然后打包上传至oss
+     */
+//    @GetMapping("/testAsyncDownloadAndZip")
+//    public void testAsyncDownloadAndZip() {
+//        /** 1、配置restTemplate，用于下载文件 **/
+//        RestTemplate restTemplate = new RestTemplate();
+//        /** 2、文件下载地址 **/
+//        List<String> fileAddrList = Lists.newArrayList();
+//        fileAddrList.add("https://wlyd-oss-uat.oss-cn-zhangjiakou.aliyuncs.com/fin/invoice/10043373.pdf?OSSAccessKeyId=LTAI5tK4bkfjsLgsCEkjNnJ5&Expires=1768113682&Signature=l2UYwq%2Fb3DT7y64BRBa33uej%2B7Y%3D");
+//        fileAddrList.add("https://wlyd-oss-uat.oss-cn-zhangjiakou.aliyuncs.com/fin/invoice/10067415.pdf?OSSAccessKeyId=LTAI5tK4bkfjsLgsCEkjNnJ5&Expires=1768113725&Signature=qA55LVXX7vANLiH%2FWYbNdb8zdLA%3D");
+//        fileAddrList.add("https://wlyd-oss-uat.oss-cn-zhangjiakou.aliyuncs.com/fin/invoice/10081794.pdf?OSSAccessKeyId=LTAI5tK4bkfjsLgsCEkjNnJ5&Expires=1768113743&Signature=1ML1ChCngI22fWAGfAN%2BRBHOfcY%3D");
+//        // 创建本地临时目录(防止多人同时下载同一个文件时创建同名文件冲突，因此要生成随机临时目录，且便于一并清理本地创建的临时文件)
+//        // 文件目录可以指定为当前系统的临时目录：System.getProperty("java.io.tmpdir")。以下是本地测试方便验证的～
+////        File tempDir = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
+//        File tempDir = new File("/Users/manman/Desktop/", UUID.randomUUID().toString());
+//        if (!tempDir.mkdirs()) {
+//            log.error("创建临时目录失败");
+//            return;
+//        }
+//        /** 3、创建OssClient **/
+//        ClientBuilderConfiguration configuration = new ClientBuilderConfiguration();
+//        OSS ossClient = new OSSClientBuilder().build(ossEndpoint, accessKeyId, accessKeySecret, configuration);
+//        /** 4、开启异步总任务（包含：并行下载 -> 串行打包 -> 上传） **/
+//        System.out.println("异步任务开始执行：" + Thread.currentThread().getName());
+//        try {
+//            /** --- 第一阶段：多线程并行下载 --- **/
+//            List<CompletableFuture<DownloadResult>> futures = Lists.newArrayList();
+//            for (int i = 0; i < fileAddrList.size(); i++) {
+//                final String url = fileAddrList.get(i);
+//                final int index = i + 1;
+//                // 启动子任务：只负责下载数据到内存(byte[])，不负责写ZIP
+//                CompletableFuture<DownloadResult> future = CompletableFuture.supplyAsync(() -> {
+//                    try {
+//                        // 关键点：通过Resource获取文件的inputStream。按照缓存大小进行读取，防止一次落地到本地内存导致OOM
+//                        // 使用 URI.create 防止重复转义
+//                        ResponseEntity<Resource> entity = restTemplate.getForEntity(URI.create(url), Resource.class);
+//                        // 文件名称
+//                        String fileName = "wp-" + index + ".pdf";
+//                        // 文件目录可以指定为当前系统的临时目录：System.getProperty("java.io.tmpdir")。以下是本地测试方便验证的～
+//                        File tempFile = new File(tempDir, fileName);
+//                        // 按照byte[]缓存区大小读取文件，防止一次落地到本地内存导致OOM。线程数量不是夸张的并发场景下也不会导致OOM。
+//                        try (InputStream is = entity.getBody().getInputStream();
+//                             OutputStream os = new FileOutputStream(tempFile)) {
+//                            // 传统的流拷贝
+//                            byte[] buffer = new byte[8192];
+//                            int len;
+//                            while ((len = is.read(buffer)) > 0) {
+//                                os.write(buffer, 0, len);
+//                            }
+//                        }
+//                        return new DownloadResult(fileName, tempFile);
+//                    } catch (Exception e) {
+//                        log.error("单个文件下载失败: {}", url, e);
+//                        // 失败返回null，即相当于下载文件失败。设置为null便于后续打包时跳过
+//                        return null;
+//                    }
+//                }, commonTaskExecutor);
+//                futures.add(future);
+//            }
+//            /** --- 第二阶段：等待所有下载任务完成 --- **/
+//            // List集合转数组，new CompletableFuture[0]给定转数组时的数据结构，否则直接futures.toArray<>将会变成Object[]
+//            CompletableFuture[] arr = futures.toArray(new CompletableFuture[0]);
+//            // 通过allOf合并所有future，等待所有的子线程结束
+//            CompletableFuture.allOf(arr).join();
+//            /** --- 第三阶段：串行打包（解决 ZipOutputStream 线程不安全问题） --- **/
+//            // 如果是浏览器直接下载，则创建reponse的输出流
+////            OutputStream baos = httpServletResponse.getOutputStream();
+//            // 如果是上传至其他文件系统如OSS，则为了防止zip文件过大，也放在磁盘中～
+//            File finalZipFile = new File(tempDir, "final.zip");
+//            OutputStream baos = new FileOutputStream(finalZipFile);
+//            try (ZipOutputStream zipOutputStream = new ZipOutputStream(baos)) {
+//                // 遍历所有 Future 结果，依次写入 ZIP
+//                for (CompletableFuture<DownloadResult> f : futures) {
+//                    // 因为前面已经 join 过了，这里 get 是立刻返回的
+//                    DownloadResult result = f.get();
+//                    // 判空（防止下载失败的文件导致空指针）
+//                    if (result != null && result.getTempFile() != null) {
+//                        ZipEntry zipEntry = new ZipEntry(result.fileName);
+//                        zipOutputStream.putNextEntry(zipEntry);
+//                        // 将内存中的 byte[] 写入 ZIP
+//                        try (InputStream fis = new FileInputStream(result.getTempFile())) {
+//                            byte[] buffer = new byte[8192];
+//                            int len;
+//                            while ((len = fis.read(buffer)) > 0) {
+//                                zipOutputStream.write(buffer, 0, len);
+//                            }
+//                        }
+//                    }
+//                }
+//                zipOutputStream.closeEntry();
+//                // 必须：封箱，zip流文件生成完成。
+//                // 但是ZipOutputStream zipOutputStream声明的时候在try-with-resources中了所以不显式调用也可以，即使再次显式调用也没不会报错～
+//                // zipOutputStream.finish();
+//                log.info("ZIP打包下载成功");
+//            }
+//            /** --- 第四阶段：如果要上传至其他文件系统，比如OSS --- **/
+//            // 设置元数据
+//            ObjectMetadata metadata = new ObjectMetadata();
+//            metadata.setContentType("application/zip");
+//            metadata.setContentDisposition("attachment;filename=" + URLEncoder.encode("发票汇总.zip", "UTF-8"));
+//            ossClient.putObject("wlyd-oss-uat", "oil/invoice/wp.zip", finalZipFile, metadata);
+//        } catch (Exception e) {
+//            log.error("打包下载出现异常", e);
+//        } finally {
+//            /** 5、删除临时文件，并关闭自行创建的ossClient，如果是Spring托管的ossClient就不用手动关闭了 **/
+//            // 如果是Spring托管的ossClient就不用手动关闭了～自行创建的一定要手动关闭
+//            ossClient.shutdown();
+//            // 删除本地创建的临时目录以及目录下的临时文件
+//            deleteDir(tempDir);
+//        }
+//    }
 
 }
 
