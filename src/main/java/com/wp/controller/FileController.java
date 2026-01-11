@@ -13,6 +13,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -48,6 +49,9 @@ public class FileController {
 
     @javax.annotation.Resource
     private RestTemplate restTemplate;
+
+    @javax.annotation.Resource
+    private ThreadPoolTaskExecutor commonTaskExecutor;
 
     /**
      * 文件上传
@@ -533,21 +537,6 @@ public class FileController {
     /**
      * 通过base64处理文件，即将文件转成base64字符串，以及将base64字符串还原成文件的方法参见TestBase64Controller中的方法
      **/
-
-
-    // 定义局部内部类用于传递结果（文件名+文件内容）
-    @Data
-    class DownloadResult {
-        // 文件名称
-        private String fileName;
-        // 文件内容
-        private byte[] data;
-
-        public DownloadResult(String fileName, byte[] data) {
-            this.fileName = fileName;
-            this.data = data;
-        }
-    }
 
     /**
      * 多线程同时下载文件，然后打包上传至OSS文档服务器。但是此方式对内存要求较大，因为下载文件是直接通过byte[]数组下载到本地了，然后再一次写入到一个输出流中。
