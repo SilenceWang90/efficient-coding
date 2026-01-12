@@ -594,6 +594,14 @@ public class FileController {
                 CompletableFuture<DownloadResult> future = CompletableFuture.supplyAsync(() -> {
                     try {
                         // 关键点：通过Resource获取文件的inputStream。按照缓存大小进行读取，防止使用byte[]一次落地到本地内存导致OOM
+                        // 貌似这个才是省内存的写法restTemplate.getForEntity貌似封装了转换器，Resource其实底层还是通过byte[]一次性读取了文件
+                        /*restTemplate.execute(url, HttpMethod.GET, null, response -> {
+                            // 这里的流是活的，且连接还没关
+                            InputStream is = response.getBody();
+                            // 手动读流写文件...
+                            StreamUtils.copy(is, new FileOutputStream("bigfile.zip"));
+                            return null;
+                        });*/
                         // 使用 URI.create 防止重复转义
                         ResponseEntity<Resource> entity = restTemplate.getForEntity(URI.create(url), Resource.class);
                         // 文件名称
@@ -713,7 +721,15 @@ public class FileController {
 //                // 启动子任务：只负责下载数据到内存(byte[])，不负责写ZIP
 //                CompletableFuture<DownloadResult> future = CompletableFuture.supplyAsync(() -> {
 //                    try {
-//                        // 关键点：通过Resource获取文件的inputStream。按照缓存大小进行读取，防止使用byte[]接收一次落地到本地内存导致OOM
+//                      // 关键点：通过Resource获取文件的inputStream。按照缓存大小进行读取，防止使用byte[]接收一次落地到本地内存导致OOM
+                        // 貌似这个才是省内存的写法restTemplate.getForEntity貌似封装了转换器，Resource其实底层还是通过byte[]一次性读取了文件
+                        /*restTemplate.execute(url, HttpMethod.GET, null, response -> {
+                            // 这里的流是活的，且连接还没关
+                            InputStream is = response.getBody();
+                            // 手动读流写文件...
+                            StreamUtils.copy(is, new FileOutputStream("bigfile.zip"));
+                            return null;
+                        });*/
 //                        // 使用 URI.create 防止重复转义
 //                        ResponseEntity<Resource> entity = restTemplate.getForEntity(URI.create(url), Resource.class);
 //                        // 文件名称
