@@ -582,6 +582,7 @@ public class FileController {
         System.out.println("异步任务开始执行：" + Thread.currentThread().getName());
         try {
             /** --- 第一阶段：设置response响应头信息 --- **/
+            // 可以通过Spring的MediaTypeFactory.getMediaType(String fileName)的方法获取当前文件的ContentType
             httpServletResponse.setContentType("application/zip");
             String downloadName = URLEncoder.encode("发票汇总.zip", "UTF-8");
             httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + downloadName);
@@ -794,6 +795,7 @@ public class FileController {
 //            /** --- 第四阶段：如果要上传至其他文件系统，比如OSS --- **/
 //            // 设置元数据
 //            ObjectMetadata metadata = new ObjectMetadata();
+//            // 可以通过Spring的MediaTypeFactory.getMediaType(String fileName)的方法获取当前文件的ContentType
 //            metadata.setContentType("application/zip");
 //            metadata.setContentDisposition("attachment;filename=" + URLEncoder.encode("发票汇总.zip", "UTF-8"));
 //            ossClient.putObject("wlyd-oss-uat", "oil/invoice/wp.zip", finalZipFile, metadata);
