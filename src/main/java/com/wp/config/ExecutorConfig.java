@@ -53,6 +53,7 @@ public class ExecutorConfig {
 
     /**
      * 常规服务线程池
+     *
      * @return
      */
     @Bean(name = "commonTaskExecutor")
@@ -68,10 +69,8 @@ public class ExecutorConfig {
         threadPool.setKeepAliveSeconds(KEEP_ALIVE_SECONDS);
         //线程名前缀
         threadPool.setThreadNamePrefix(THREAD_NAME_PREFIX);
-        if (log.isInfoEnabled()) {
-            log.info("init asyncThreadPool. corePoolSize:{}, maxPoolSize:{}, queueCapacity:{}, keepAliveSeconds:{}",
-                    CORE_POOL_SIZE, MAX_POOL_SIZE, QUEUE_CAPACITY, KEEP_ALIVE_SECONDS);
-        }
+        log.info("init asyncThreadPool. corePoolSize:{}, maxPoolSize:{}, queueCapacity:{}, keepAliveSeconds:{}",
+                CORE_POOL_SIZE, MAX_POOL_SIZE, QUEUE_CAPACITY, KEEP_ALIVE_SECONDS);
         // 当池满且队列满时，由调用线程直接执行
         threadPool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         threadPool.initialize();
