@@ -534,7 +534,8 @@ public class FileController {
 
 
     /**
-     * 通过base64处理文件，即将文件转成base64字符串，以及将base64字符串还原成文件的方法参见TestBase64Controller中的方法
+     * 通过base64处理文件，即将文件转成base64字符串，以及将base64字符串还原成文件的方法
+     * 参见Base64Controller中的方法
      **/
 
     /**
