@@ -234,6 +234,18 @@
         </dependency>
 
 
+        <!-- 添加这个核心依赖，触发 DataSource 和 事务管理器 的自动配置 -->
+        <!-- 此依赖目前完全用于测试Springboot观察者模式对异步事件监听场景下，子线程与主线程事物强关联的测试 -->
+        <!-- applicationevent目录下的所有测试类都属于覆盖范围 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
 
