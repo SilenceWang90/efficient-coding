@@ -1,5 +1,6 @@
 package com.wp.controller;
 
+import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +20,9 @@ public class SseController {
 
     @GetMapping("/test1")
     public SseEmitter test1() {
-        /*TestDto dto = new TestDto();
+        TestDto dto = new TestDto();
         dto.setAge(10);
-        dto.setName("wwww");*/
+        dto.setName("我是你想要的信息，这次是我的SseEmitter学习，希望以后可以把websocket也学好，加油！！！");
         /** 1、创建长链接对象 **/
         SseEmitter sseEmitter = new SseEmitter(20000L);
         // 1.1、注册链接出现异常时触发的方法
@@ -36,7 +37,6 @@ public class SseController {
         });
         // 1.3、 注册SSE连接正常完成（主动调用complete()方法或客户端关闭连接）时触发的方法
         sseEmitter.onCompletion(() -> System.out.println("SSE连接正常结束"));
-
         /** 2、异步处理。切记不能和controller接口同步处理，否则就是常规的一次性返回，达不到流式返回以及长链接的效果了 **/
         ExecutorService executor = Executors.newCachedThreadPool();
         executor.execute(() -> {
@@ -48,18 +48,17 @@ public class SseController {
                             .name("message")
                             // 当链接断开后，允许客户端在指定时间后进行重连，避免频繁重连造成服务器压力
                             .reconnectTime(5000L)
-                            .data("我是你想要的信息，这次是我的SseEmitter学习，希望以后可以把websocket也学好，加油！！！");
-//                            .data(dto);// 可以发送对象，SSE将对对象自动序列化
+                            .data(JSONUtil.toJsonStr(dto));
+//                            .data(dto);// 可以直接发送对象，SSE将对对象自动序列化
                     sseEmitter.send(sseEventBuilder);
                     // 模拟每隔2秒返回一次数据
                     Thread.sleep(2000L);
                 }
+                /** 业务逻辑执行完成。主动标记SSE连接完成，关闭连接并触发onCompletion回调 **/
+                sseEmitter.complete();
             } catch (Exception ex) {
                 // 主动终止并传递异常，并会立即触发 onError() 注册的回调逻辑
                 sseEmitter.completeWithError(ex);
-            } finally {
-                /** 主动标记SSE连接完成，关闭连接并触发onCompletion回调 **/
-                sseEmitter.complete();
             }
         });
         System.out.println("Sse接口方法执行完成");
