@@ -50,9 +50,9 @@ public class SseController {
                             .reconnectTime(5000L)
                             .data("我是你想要的信息，这次是我的SseEmitter学习，希望以后可以把websocket也学好，加油！！！");
 //                            .data(dto);// 可以发送对象，SSE将对对象自动序列化
-                    // 参数说明
                     sseEmitter.send(sseEventBuilder);
-                    Thread.sleep(1500L);
+                    // 模拟每隔2秒返回一次数据
+                    Thread.sleep(2000L);
                 }
             } catch (Exception ex) {
                 // 主动终止并传递异常，并会立即触发 onError() 注册的回调逻辑
