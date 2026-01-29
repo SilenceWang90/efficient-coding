@@ -24,17 +24,17 @@ public class SseController {
         dto.setName("wwww");*/
         /** 1、创建长链接对象 **/
         SseEmitter sseEmitter = new SseEmitter(20000L);
-        // 1.1、链接出现异常时触发
+        // 1.1、注册链接出现异常时触发的方法
         sseEmitter.onError(exception -> {
             System.out.println("SSE连接发生异常");
             sseEmitter.complete();
         });
-        // 1.2、 链接超时时触发
+        // 1.2、注册链接超时时触发的方法
         sseEmitter.onTimeout(() -> {
             System.out.println("SSE连接超时，主动关闭");
             sseEmitter.complete();
         });
-        // 1.3、 当SSE连接正常完成（主动调用complete()方法或客户端关闭连接）时触发
+        // 1.3、 注册SSE连接正常完成（主动调用complete()方法或客户端关闭连接）时触发的方法
         sseEmitter.onCompletion(() -> System.out.println("SSE连接正常结束"));
 
         /** 2、异步处理。切记不能和controller接口同步处理，否则就是常规的一次性返回，达不到流式返回以及长链接的效果了 **/
