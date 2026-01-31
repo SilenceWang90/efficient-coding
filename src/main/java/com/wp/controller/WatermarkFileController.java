@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,18 +43,20 @@ public class WatermarkFileController {
         WatermarkConfig watermarkConfig = new MyWatermarkConfig();
         // 设置水印透明度
         watermarkConfig.setAlpha(0.5f);
-        // 1.2、水印文件
-        FontConfig myFontConfig = new MyFontConfig();
+        // 1.2、水印文字
+        FontConfig fontConfig = new MyFontConfig();
         // 设置水印文字大小
-        myFontConfig.setFontSize(30);
+        fontConfig.setFontSize(30);
+        // 文字风格
+        fontConfig.setFontStyle(Font.PLAIN);
         /** 2、创建水印文件 **/
         byte[] watermarkFile = EasyWatermark.create()
                 .file(file.getBytes())
                 // 自定义配置
                 .config(watermarkConfig)
-                .config(myFontConfig)
+                .config(fontConfig)
                 // 水印类型
-                .easyWatermarkType(EasyWatermarkTypeEnum.CENTER)
+                .easyWatermarkType(EasyWatermarkTypeEnum.OVERSPREAD)
                 .text("我自定义的水印")
                 .executor();
         /** 3、文件写入response输出流 **/

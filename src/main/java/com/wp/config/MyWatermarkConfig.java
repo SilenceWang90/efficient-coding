@@ -25,11 +25,11 @@ public class MyWatermarkConfig extends WatermarkConfig {
     private boolean ignoreRotation = true;
     // 水印透明度
     private float alpha = 1;
-    // 铺满水印子类型
+    // 铺满水印类型
     private OverspreadTypeEnum overspreadType = OverspreadTypeEnum.NORMAL;
-    // 居中水印子类型
+    // 居中水印类型
     private CenterLocationTypeEnum centerLocationType = CenterLocationTypeEnum.VERTICAL_CENTER;
-    // 对角水印子类型
+    // 对角水印类型
     private DiagonalDirectionTypeEnum diagonalDirectionType = DiagonalDirectionTypeEnum.TOP_TO_BOTTOM;
 
     /**
