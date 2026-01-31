@@ -125,8 +125,7 @@
         const captchaIdInput = document.getElementById('captchaId');
 
         // 加载验证码
-        function loadCaptcha()
-        {
+        function loadCaptcha() {
             fetch('http://localhost:8080/captcha/getCaptcha')
                 .then(response => {
                     if (!response.ok) {
@@ -176,11 +175,10 @@
             formData.append('captchaId', captchaId);
             formData.append('answer', answer);
 
-            fetch('http://localhost:8080/captcha/memory-validate', {
+            fetch('http://localhost:8080/captcha/validateCaptcha', {
                 method: 'POST',
                 body: formData
-            })
-                .then(response => {
+            }).then(response => {
                     if (response.ok) {
                         return response.text();
                     } else {
@@ -188,10 +186,14 @@
                     }
                 })
                 .then(result => {
-                    showMessage('验证成功！', 'success');
+                    if (result === 'true') {
+                        showMessage('验证成功！', 'success');
+                    } else {
+                        throw new Error('验证码错误');
+                    }
                 })
                 .catch(error => {
-                    showMessage('验证失败，请重试', 'error');
+                    showMessage(error.message || '验证失败，请重试', 'error');
                     loadCaptcha(); // 刷新验证码
                     answerInput.value = '';
                 });
