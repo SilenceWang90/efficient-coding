@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Random;
@@ -69,14 +70,21 @@ public class CaptchaUtil {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         /** 2、Graphics2D，通过Graphics2D在画布BufferedImage上进行绘图 **/
         Graphics2D graphics = image.createGraphics();
-        // 设置画笔为白色
+        /** 2.1、验证码背景设置为图片 **/
+        // 图片在工程中，拿出去放到桌面上即可
+        File bgPictureFile = new File("/Users/manman/Desktop/bg.png");
+        BufferedImage bgImage = ImageIO.read(bgPictureFile);
+        // 图片设置成和image画布一样的大小
+        graphics.drawImage(bgImage, 0, 0, width, height, null);
+        /** 2.1、验证码背景设置为白色 **/
+        /*// 设置画笔为白色
         graphics.setColor(Color.WHITE);
         // 用当前的画笔画满BufferedImage画布，相当于设置背景色。BufferedImage新建的时候如果不指明颜色则默认全黑
         // (x,y)为绘画起点，width、height为指定矩形的宽度和高度。即从起点(x,y)出发，绘制一个宽为width，高为height的一个矩形。
-        graphics.fillRect(0, 0, width, height);
-        // 设置字体
+        graphics.fillRect(0, 0, width, height);*/
+        // 2.2、设置字体
         graphics.setFont(new Font("Arial", Font.BOLD, 16));
-        // 绘制5条干扰线（让验证码更难被机器识别）
+        /** 3、绘制5条干扰线（让验证码更难被机器识别） **/
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
             int x1 = random.nextInt(width);
@@ -88,7 +96,7 @@ public class CaptchaUtil {
             // 绘制干扰线。在(x1,y1)和(x2,y2)两个点之间绘制一条直线
             graphics.drawLine(x1, y1, x2, y2);
         }
-        /** 3、绘制表达式文字 **/
+        /** 4、绘制表达式文字 **/
         // 设置画笔为黑色
         graphics.setColor(Color.BLACK);
         // 传入验证码文本内容。x、y即文本坐标位置
