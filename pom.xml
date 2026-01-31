@@ -213,11 +213,11 @@
 
         <!-- 和其他poi的jar有冲突，要想验证可以把com.wp.generate_file.GenerateFileController.generateWord接口
         放在另一个干净的工程中验证即可-->
-<!--        <dependency>-->
-<!--            <groupId>com.deepoove</groupId>-->
-<!--            <artifactId>poi-tl</artifactId>-->
-<!--            <version>1.12.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.deepoove</groupId>-->
+        <!--            <artifactId>poi-tl</artifactId>-->
+        <!--            <version>1.12.0</version>-->
+        <!--        </dependency>-->
 
         <!-- 引入netty依赖 -->
         <dependency>
@@ -245,6 +245,13 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- 添加水印 -->
+        <dependency>
+            <groupId>org.easywatermark</groupId>
+            <artifactId>easy-watermark</artifactId>
+            <version>0.0.3</version>
         </dependency>
     </dependencies>
 
