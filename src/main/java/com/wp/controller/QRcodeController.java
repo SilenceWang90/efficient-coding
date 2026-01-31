@@ -14,13 +14,24 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 
 /**
- * @Description 生成二维码
+ * @Description 生成、解析二维码
  * @Author admin
  * @Date 2024/6/15 14:29
  */
 @Controller
 @RequestMapping("/qrcode")
 public class QRcodeController {
+
+    /**
+     * 生成二维码
+     *
+     * @param text   二维码文本内容
+     * @param width  二维码宽度
+     * @param height 二维码高度
+     * @return
+     * @throws IOException
+     * @throws WriterException
+     */
     @GetMapping("/generateQRcode")
     public ModelAndView generateQRcode(@RequestParam("text") String text
             , @RequestParam("width") int width
@@ -33,9 +44,9 @@ public class QRcodeController {
     }
 
     /**
-     * @Description 解析二维码
      * @param multipartFile
      * @return
+     * @Description 解析二维码
      */
     @GetMapping("/readQRCode")
     @ResponseBody
