@@ -74,7 +74,7 @@ public class CaptchaController {
     public Boolean validateCaptcha(@RequestParam("captchaId") String captchaId, @RequestParam("answer") String userAnswer) {
         try {
             /** 1、获取验证码正确答案 **/
-            int correctAnswer = Integer.parseInt(stringRedisTemplate.opsForValue().get("captchaId"));
+            int correctAnswer = Integer.parseInt(stringRedisTemplate.opsForValue().get(captchaId));
             int answer = Integer.parseInt(userAnswer);
             System.out.println("验证码ID: " + captchaId);
             System.out.println("用户输入答案: " + answer);
