@@ -53,13 +53,18 @@ public class WatermarkFileController {
         fontConfig.setFontStyle(Font.PLAIN);
         /** 2、创建水印文件 **/
         byte[] watermarkFile = EasyWatermark.create()
+                // 要添加水印的文件
                 .file(file.getBytes())
-                // 自定义配置
+                // 水印配置
                 .config(watermarkConfig)
+                // 水印字体配置
                 .config(fontConfig)
+                // 添加的水印是文字
+                .text("我自定义的水印")
                 // 水印类型(铺满)
                 .easyWatermarkType(EasyWatermarkTypeEnum.OVERSPREAD)
-                .text("我自定义的水印")
+//                // 添加的水印还可以是图片
+//                .image()
                 .executor();
         /** 3、文件写入response输出流 **/
         // 设置下载的文件名称(filename属性就是设置下载的文件名称叫什么，通过字符类型转换解决中文名称为空的问题)
