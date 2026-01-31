@@ -52,7 +52,7 @@ public class CaptchaController {
             // 2.2、生成验证码的唯一ID
             String captchaId = UUID.randomUUID().toString();
             // 分布式集群环境中要将验证码的信息存储在redis中，便于后续的验证
-            stringRedisTemplate.opsForValue().set(captchaId, String.valueOf(mathExpression.getResult()), Duration.ofSeconds(20));
+            stringRedisTemplate.opsForValue().set(captchaId, String.valueOf(mathExpression.getResult()), Duration.ofSeconds(60));
             /** 3、封装图片信息返回值 **/
             captchaResponse.setCaptchaId(captchaId);
             captchaResponse.setImageData(imageBase64);
