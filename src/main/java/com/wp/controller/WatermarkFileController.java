@@ -55,7 +55,7 @@ public class WatermarkFileController {
                 // 自定义配置
                 .config(watermarkConfig)
                 .config(fontConfig)
-                // 水印类型
+                // 水印类型(铺满)
                 .easyWatermarkType(EasyWatermarkTypeEnum.OVERSPREAD)
                 .text("我自定义的水印")
                 .executor();
