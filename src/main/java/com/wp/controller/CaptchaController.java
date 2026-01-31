@@ -1,12 +1,17 @@
 package com.wp.controller;
 
-import org.springframework.http.ResponseEntity;
+import com.wp.util.CaptchaUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.util.UUID;
 
 /**
  * @author wangpeng
@@ -16,8 +21,12 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/captcha")
 public class CaptchaController {
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     /**
      * 显示验证页面
+     *
      * @return 页面名称
      */
     @GetMapping("/index")
@@ -27,23 +36,35 @@ public class CaptchaController {
         return modelAndView;
     }
 
+    /**
+     * 获取验证码图片
+     *
+     * @return Base64编码的验证码图片
+     */
+    @GetMapping("/getCaptcha")
+    @ResponseBody
+    public CaptchaUtil.CaptchaResponse getCaptcha() {
+        /** 1、创建验证码表达式以及表达式结果 **/
+        CaptchaUtil.MathExpression mathExpression = CaptchaUtil.generateMathExpression();
+        /** 2、创建验证码图片信息 **/
+        CaptchaUtil.CaptchaResponse captchaResponse = new CaptchaUtil.CaptchaResponse();
+        try {
+            // 2.1、创建验证码图片base64字符串
+            String imageBase64 = CaptchaUtil.generateCaptchaImage(mathExpression.getExpression());
+            // 2.2、生成验证码的唯一ID
+            String captchaId = UUID.randomUUID().toString();
+            // 分布式集群环境中要将验证码的信息存储在redis中，便于后续的验证
+            stringRedisTemplate.opsForValue().set(captchaId, String.valueOf(mathExpression.getResult()), Duration.ofSeconds(20));
+            captchaResponse.setCaptchaId(captchaId);
+            captchaResponse.setImageData(imageBase64);
+            return captchaResponse;
+        } catch (IOException e) {
+            return captchaResponse;
+        }
+    }
+
 //    /**
-//     * 获取验证码图片（基于Session）
-//     * @return Base64编码的验证码图片
-//     */
-//    @GetMapping("/captcha")
-//    @ResponseBody
-//    public ResponseEntity<String> getCaptcha() {
-//        try {
-//            String imageBase64 = captchaService.generateCaptcha();
-//            return ResponseEntity.ok(imageBase64);
-//        } catch (IOException e) {
-//            return ResponseEntity.status(500).body("生成验证码失败");
-//        }
-//    }
-//
-//    /**
-//     * 验证答案（基于Session）
+//     * 验证答案
 //     * @param answer 用户输入的答案
 //     * @return 验证结果
 //     */

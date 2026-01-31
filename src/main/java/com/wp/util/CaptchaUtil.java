@@ -1,5 +1,9 @@
 package com.wp.util;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -99,24 +103,24 @@ public class CaptchaUtil {
     }
 
     /**
-     * 内部类用于存储生成的表达式和结果
+     * 存储生成的验证码表达式和结果
      */
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MathExpression {
         private String expression;
         private int result;
+    }
 
-        public MathExpression(String expression, int result) {
-            this.expression = expression;
-            this.result = result;
-        }
-
-        public String getExpression() {
-            return expression;
-        }
-
-        public int getResult() {
-            return result;
-        }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CaptchaResponse {
+        // 验证码id
+        private String captchaId;
+        // 验证码图片信息(base64字符串信息)
+        private String imageData;
     }
 
 }
