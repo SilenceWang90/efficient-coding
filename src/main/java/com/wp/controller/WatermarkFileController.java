@@ -43,6 +43,8 @@ public class WatermarkFileController {
         WatermarkConfig watermarkConfig = new MyWatermarkConfig();
         // 设置水印透明度
         watermarkConfig.setAlpha(0.5f);
+        // 水印倾斜45度
+        watermarkConfig.setAngle(45);
         // 1.2、水印文字
         FontConfig fontConfig = new MyFontConfig();
         // 设置水印文字大小
