@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author wangpeng
@@ -34,31 +33,37 @@ public class RedisController {
      * 上锁
      */
     @RequestMapping("/redisLock")
-    public void redisLock() {
+    public String redisLock() {
+        String result;
         boolean isLocked = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, Thread.currentThread().getName(), Duration.ofSeconds(60));
         this.lockValue = Thread.currentThread().getName();
         log.info("lockKey锁的value值为{}", Thread.currentThread().getName());
         if (isLocked) {
+            result = "上锁成功";
             try {
                 // 业务逻辑处理
             } finally {
                 // 删除锁
-                stringRedisTemplate.delete(lockKey);
+//                stringRedisTemplate.delete(lockKey);
             }
+        } else {
+            result = "上锁失败";
         }
         // 删除锁逻辑放在外面可以么？为什么？
         /*finally {
             stringRedisTemplate.delete(lockId);
         }*/
+        return result;
     }
 
     /**
      * 解锁
      */
     @RequestMapping("/redisUnLock")
-    public void redisUnLock() {
+    public boolean redisUnLock() {
         List<String> keyList = Lists.newArrayList(lockKey);
-        this.releaseLock(keyList, lockValue);
+        return this.releaseLock(keyList, lockValue);
+
     }
 
     /**
@@ -87,11 +92,11 @@ public class RedisController {
      * 锁续约
      */
     @RequestMapping("/redisRenewLock")
-    public void redisRenewLock() {
+    public boolean redisRenewLock() {
         // 锁的key
         List<String> keyList = Lists.newArrayList(lockKey);
         // 锁的value值；锁的续约时间(单位毫秒)
-        this.renewLock(keyList, lockValue, "60000");
+        return this.renewLock(keyList, lockValue, "60000");
     }
 
     /**
