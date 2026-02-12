@@ -42,6 +42,7 @@ public class RedisController {
             try {
                 // 业务逻辑处理
             } finally {
+                // 删除锁
                 stringRedisTemplate.delete(lockKey);
             }
         }
