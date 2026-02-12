@@ -92,6 +92,12 @@ public class RedisController {
         log.info("获取message的信息为：{}", message);
         log.info("获取message的信息为：{}", objectMapper.readValue(new String(message.getBody()), MyTestMessage.class));
         try {
+            /** 1、锁续约 **/
+            // 锁的key
+            List<String> keyList = Lists.newArrayList(lockKey);
+            // 锁的value值；锁的续约时间(单位毫秒)
+            this.renewLock(keyList, lockValue, "60000");
+            /** 2、消息确认 **/
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {
             throw new RuntimeException(e);
