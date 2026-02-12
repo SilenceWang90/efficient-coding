@@ -57,12 +57,11 @@ public class RedisController {
     @RequestMapping("/redisUnLock")
     public void redisUnLock() {
         List<String> keyList = Lists.newArrayList(lockKey);
-        String[] valueArray = Stream.of(lockValue).toArray((String[]::new));
-        this.releaseLock(keyList, valueArray);
+        this.releaseLock(keyList, lockValue);
     }
 
     /**
-     * 锁释放：基于lua脚本原子性执行，安全释放。values数组中最好都是string，lua脚本执行默认按照string读取。若要其他类型需要在脚本中变换类型。
+     * 锁释放：基于lua脚本原子性执行，安全释放。values数组中最好都是string，lua脚本执行默认按照string读取。若要其他类型需要在RedisScrpit脚本中变换类型。
      *
      * @param keys   脚本中keys[]的内容，索引从1开始。
      * @param values 脚本中ARGV[]的内容，索引从1开始。一般只需要传分布式锁存储的值
@@ -83,7 +82,6 @@ public class RedisController {
     }
 
 
-
     /**
      * 锁续约
      */
@@ -92,12 +90,11 @@ public class RedisController {
         // 锁的key
         List<String> keyList = Lists.newArrayList(lockKey);
         // 锁的value值；锁的续约时间(单位毫秒)
-        String[] valueArray = {lockValue, "60000"};
-        this.renewLock(keyList, valueArray);
+        this.renewLock(keyList, lockValue, "60000");
     }
 
     /**
-     * 锁续约：基于lua脚本原子性执行，安全续约。values参数必须都是string，lua脚本执行默认按照string读取。非要其他类型需要在脚本中变换类型。
+     * 锁续约：基于lua脚本原子性执行，安全续约。values参数必须都是string，lua脚本执行默认按照string读取。非要其他类型需要在RedisScrpit脚本中变换类型。
      *
      * @param keys   脚本中keys[]的内容，索引从1开始。
      * @param values 脚本中ARGV[]的内容，索引从1开始。此方法需要2个参数，分布式锁存储的值以及续约的时间(values[0] = 锁的 Value (所有权标识), values[1] = 续约时长(毫秒))。PEXPIRE方法续约时间单位默认是毫秒，EXPIRE方法默认时间单位是秒，根据需要选择任一方法放在脚本中即可
