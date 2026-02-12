@@ -58,11 +58,15 @@ public class RedisController {
             /** 发送延迟消息 **/
             // 消息元信息
             MessageProperties messageProperties = new MessageProperties();
-            messageProperties.setExpiration("5000");
+            // 15秒过期
+            messageProperties.setExpiration("15000");
             // 消息数据
             MyTestMessage myTestMessage = new MyTestMessage();
             myTestMessage.setName("wangpeng").setAge(18).setPrice(BigDecimal.TEN).setCreateDateTime(LocalDateTime.now());
-            rabbitTemplate.convertAndSend(objectMapper.writeValueAsString(myTestMessage), messageProperties);
+            // 封装发送的消息
+            Message message = new Message(objectMapper.writeValueAsBytes(myTestMessage), messageProperties);
+            // 发送至RabbitMq
+            rabbitTemplate.convertAndSend("wp-redis-delay-exchange", "redis-delay", message);
             result = "上锁成功";
             try {
                 // 业务逻辑处理

@@ -13,7 +13,8 @@ spring:
     host: localhost
     username: wangpeng
     password: wangpeng
-    virtual-host: /
+#    virtual-host: /
+    port: 5672
 
 
 individual-name: wp-main-name

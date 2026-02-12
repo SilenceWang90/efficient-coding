@@ -43,7 +43,7 @@ public class RabbitMqConfig {
          CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
          connectionFactory.setAddresses(ip1:port1,ip2:port2,ip3:port3);**/
         connectionFactory.setUsername("wangpeng");
-        connectionFactory.setPassword("Wangpeng90");
+        connectionFactory.setPassword("wangpeng");
         connectionFactory.setVirtualHost("/");
         // 是否启用发送确认机制
         // 是否启用发送到交换区的确认
