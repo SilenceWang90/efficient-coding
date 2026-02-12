@@ -1,14 +1,26 @@
 package com.wp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.rabbitmq.client.Channel;
+import com.wp.dto.MyTestMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,17 +40,29 @@ public class RedisController {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * 上锁
      */
     @RequestMapping("/redisLock")
-    public String redisLock() {
+    public String redisLock() throws JsonProcessingException {
         String result;
         boolean isLocked = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, Thread.currentThread().getName(), Duration.ofSeconds(60));
         this.lockValue = Thread.currentThread().getName();
         log.info("lockKey锁的value值为{}", Thread.currentThread().getName());
         if (isLocked) {
+            /** 发送延迟消息 **/
+            // 消息元信息
+            MessageProperties messageProperties = new MessageProperties();
+            messageProperties.setExpiration("5000");
+            // 消息数据
+            MyTestMessage myTestMessage = new MyTestMessage();
+            myTestMessage.setName("wangpeng").setAge(18).setPrice(BigDecimal.TEN).setCreateDateTime(LocalDateTime.now());
+            rabbitTemplate.convertAndSend(objectMapper.writeValueAsString(myTestMessage), messageProperties);
             result = "上锁成功";
             try {
                 // 业务逻辑处理
@@ -57,6 +81,19 @@ public class RedisController {
         }*/
         return result;
     }
+
+    @RabbitListener(queues = "wp-redis-queue", containerFactory = "rabbitListenerContainerFactory")
+    @RabbitHandler
+    public void redisDeplayQueueListener(Message message, Channel channel) throws IOException {
+        log.info("获取message的信息为：{}", message);
+        log.info("获取message的信息为：{}", objectMapper.readValue(new String(message.getBody()), MyTestMessage.class));
+        try {
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     /**
      * 解锁
@@ -121,4 +158,6 @@ public class RedisController {
         Long result = stringRedisTemplate.execute(redisScript, keys, values);
         return result != null && result == 1L;
     }
+
+
 }

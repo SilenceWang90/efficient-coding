@@ -9,6 +9,11 @@ spring:
     password: 123456
     database: 0
     port: 6379
+  rabbitmq:
+    host: localhost
+    username: wangpeng
+    password: wangpeng
+    virtual-host: /
 
 
 individual-name: wp-main-name
