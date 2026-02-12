@@ -43,13 +43,15 @@ public class RedisController {
             try {
                 // 业务逻辑处理
             } finally {
-                // 删除锁
+                /** 问题2：删除锁。这种写法就安全了嘛？ **/
+                // 不行。加入A线程上锁成功，但是因为下游服务响应过慢导致锁自动释放。此时B线程获取锁成功但是还未执行完成，A线程的下游服务在此时响应结果，A线程开始释放锁。
 //                stringRedisTemplate.delete(lockKey);
             }
         } else {
             result = "上锁失败";
         }
-        // 删除锁逻辑放在外面可以么？为什么？
+        /** 问题1：删除锁逻辑放在外面可以么？为什么？**/
+        // 不行。没有获取锁就释放锁，会释放其他线程的锁
         /*finally {
             stringRedisTemplate.delete(lockId);
         }*/
