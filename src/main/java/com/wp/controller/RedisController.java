@@ -77,7 +77,7 @@ public class RedisController {
                 "end";
         // 2、封装脚本以及脚本返回值类型
         RedisScript<Long> redisScript = RedisScript.of(script, Long.class);
-        // 3、执行脚本
+        // 3、执行脚本。返回1则意味着DEL删除命令删除了一个key。
         Long result = stringRedisTemplate.execute(redisScript, keys, values);
         return result != null && result == 1L;
     }
@@ -112,7 +112,7 @@ public class RedisController {
                 "end";
         // 2、封装脚本以及脚本返回值类型
         RedisScript<Long> redisScript = RedisScript.of(script, Long.class);
-        // 3、执行脚本
+        // 3、执行脚本。返回1则意味着PEXPIRE续期命令当前key的续约成功
         Long result = stringRedisTemplate.execute(redisScript, keys, values);
         return result != null && result == 1L;
     }
