@@ -86,8 +86,8 @@ public class RedisController {
         return result;
     }
 
-    @RabbitListener(queues = "wp-redis-queue", containerFactory = "rabbitListenerContainerFactory")
-    @RabbitHandler
+    @RabbitListener(queues = "wp-redis-queue", containerFactory = "simpleRabbitListenerContainerFactory")
+//    @RabbitHandler
     public void redisDeplayQueueListener(Message message, Channel channel) throws IOException {
         log.info("获取message的信息为：{}", message);
         log.info("获取message的信息为：{}", objectMapper.readValue(new String(message.getBody()), MyTestMessage.class));
